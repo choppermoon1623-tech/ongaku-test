@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3年音楽 テスト勉強</title>
+<style>
+:root{
+  --bg:#f6f3ec; --card:#fff; --ink:#1f2633; --sub:#5a6272; --line:#ddd6c7;
+  --riron:#2f6fb5; --vltava:#178a7e; --aida:#b5562f; --mix:#6a4fb0;
+  --ok:#1e8a4c; --ng:#c0392b; --hl:#fff2b8;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"BIZ UDPGothic","BIZ UDGothic","Hiragino Sans","Yu Gothic",sans-serif;line-height:1.6;-webkit-text-size-adjust:100%}
+button{font:inherit;cursor:pointer}
+header{background:#1f2633;color:#fff;padding:10px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
+header h1{font-size:18px;margin:0;flex:1}
+header button{background:#ffffff22;color:#fff;border:1px solid #ffffff55;border-radius:8px;padding:4px 12px}
+main{max-width:760px;margin:0 auto;padding:16px}
+.hidden{display:none!important}
+h2{font-size:20px;margin:6px 0 12px}
+.lead{color:var(--sub);font-size:14px;margin:0 0 14px}
+/* home */
+.unit{background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:12px;border-left:8px solid var(--c);box-shadow:0 1px 3px #0001}
+.unit .t{font-weight:bold;font-size:18px}
+.unit .s{color:var(--sub);font-size:13px}
+.unit .bar{height:6px;background:#eee;border-radius:3px;margin:8px 0 10px;overflow:hidden}
+.unit .bar i{display:block;height:100%;background:var(--c)}
+.unit .stat{font-size:12px;color:var(--sub)}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:2px solid var(--c,#555);background:#fff;color:var(--c,#555);border-radius:10px;padding:8px 14px;font-weight:bold;min-width:84px}
+.btn.fill{background:var(--c,#555);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.opts{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;margin:4px 0 14px;color:var(--sub)}
+.opts select{font:inherit;padding:4px 8px;border-radius:8px;border:1px solid var(--line)}
+/* quiz */
+.qhead{display:flex;justify-content:space-between;font-size:13px;color:var(--sub)}
+.prog{height:8px;background:#e6e0d3;border-radius:4px;overflow:hidden;margin:4px 0 14px}
+.prog i{display:block;height:100%;background:var(--c);transition:width .3s}
+.qcard{background:var(--card);border-radius:14px;padding:16px;box-shadow:0 1px 3px #0001}
+.tag{display:inline-block;font-size:12px;background:var(--c);color:#fff;border-radius:20px;padding:1px 10px;margin-bottom:6px}
+.qtext{font-size:18px;font-weight:bold;margin:0 0 12px}
+.fig{text-align:center;margin:4px 0 12px}
+.fig svg{max-width:100%;height:auto}
+.choices{display:grid;gap:8px}
+.choice{text-align:left;background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px 12px;font-size:16px;display:flex;gap:10px;align-items:flex-start}
+.choice .n{flex:none;width:24px;height:24px;border-radius:50%;background:#eee;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.choice:hover:not(:disabled){border-color:var(--c)}
+.choice.ok{border-color:var(--ok);background:#e8f6ee}
+.choice.ng{border-color:var(--ng);background:#fbeaea}
+.choice:disabled{cursor:default;color:inherit}
+.fb{margin-top:12px;border-radius:10px;padding:10px 12px;font-size:15px}
+.fb.ok{background:#e8f6ee;border:1px solid #b7dfc7}
+.fb.ng{background:#fbeaea;border:1px solid #efc2bd}
+.fb b{font-size:17px}
+.next{margin-top:12px;width:100%;padding:12px;font-size:17px}
+.play{background:var(--c);color:#fff;border:none;border-radius:30px;padding:8px 18px;font-weight:bold;margin-bottom:12px}
+/* order */
+.picked{min-height:46px;border:2px dashed var(--line);border-radius:10px;padding:6px;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;align-items:center}
+.picked:empty::before{content:"下のボタンを順番にタップ";color:#aaa;font-size:14px;padding-left:4px}
+.chip{border:2px solid var(--c);background:#fff;color:var(--ink);border-radius:20px;padding:5px 12px;font-size:15px}
+.chip.in{background:var(--c);color:#fff}
+.chip.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.chip.ng{background:var(--ng);border-color:var(--ng);color:#fff}
+.chip:disabled{cursor:default}
+.pool{display:flex;flex-wrap:wrap;gap:6px}
+/* result */
+.score{font-size:46px;font-weight:bold;text-align:center;color:var(--c);margin:6px 0 0}
+.msg{text-align:center;margin:0 0 14px}
+.miss{background:#fff;border-radius:10px;padding:10px 12px;margin-bottom:8px;border-left:5px solid var(--ng);font-size:14px}
+.miss .a{color:var(--ok);font-weight:bold}
+/* cards */
+.flash{background:var(--card);border-radius:16px;min-height:230px;padding:22px 18px;box-shadow:0 2px 6px #0002;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;cursor:pointer;user-select:none;border-top:8px solid var(--c)}
+.flash .front{font-size:19px;font-weight:bold}
+.flash .back{font-size:22px;font-weight:bold;color:var(--c)}
+.flash .ex{font-size:14px;color:var(--sub);margin-top:10px}
+.flash .hint{font-size:12px;color:#999;margin-top:14px}
+.cardnav{display:flex;gap:8px;margin-top:12px}
+.cardnav .btn{flex:1;padding:12px}
+/* summary */
+.sum{background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 3px #0001}
+.sum h3{margin:0 0 8px;font-size:17px;color:var(--c);border-bottom:2px solid var(--c);padding-bottom:3px}
+.sum p,.sum li{font-size:15px}
+.sum ul{padding-left:20px;margin:6px 0}
+.k{background:linear-gradient(transparent 55%,var(--hl) 55%);font-weight:bold}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:6px 0}
+table.t th,table.t td{border:1px solid var(--line);padding:5px 6px;text-align:center;vertical-align:middle}
+table.t th{background:#f3efe5}
+.flow{display:flex;flex-direction:column;gap:4px;margin:6px 0}
+.flow div{background:#f3efe5;border-radius:8px;padding:6px 10px;font-size:14px;position:relative}
+.flow div b{color:var(--c)}
+.mini{font-size:13px;color:var(--sub)}
+.keys{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.keys .kk{border:1px solid var(--line);border-radius:10px;padding:4px;text-align:center;font-size:13px}
+.chordbtns{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chordbtns button{border:1px solid var(--c);background:#fff;color:var(--c);border-radius:8px;padding:4px 10px;font-size:14px}
+.tip{background:#fffbea;border:1px solid #efe1a4;border-radius:10px;padding:8px 12px;font-size:14px;margin-top:8px}
+footer{text-align:center;font-size:12px;color:#999;padding:20px}
+@media (max-width:480px){.qtext{font-size:17px}.choice{font-size:15px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎵 3年 音楽 テスト勉強</h1>
+  <button id="homeBtn" class="hidden" onclick="go('home')">ホーム</button>
+</header>
+<main id="app"></main>
+<footer>成績はこの端末のブラウザだけに保存されます</footer>
+
+<script>
+'use strict';
+/* ===================== 単元 ===================== */
+const UNITS = {
+  riron:{name:'楽典（音楽理論）',sub:'和音・コードネーム・調・移調・形式 ＋ 1・2年の復習',c:'var(--riron)',icon:'🎼'},
+  vltava:{name:'鑑賞「ブルタバ（モルダウ）」',sub:'スメタナ作曲　交響詩「わが祖国」から',c:'var(--vltava)',icon:'🌊'},
+  aida:{name:'鑑賞 オペラ「アイーダ」',sub:'ヴェルディ作曲　第2幕 第2場',c:'var(--aida)',icon:'🎺'}
+};
+
+/* ===================== 五線譜（SVG） ===================== */
+// 位置：ト音記号の第1線(E4)=0、半音ではなく線と間で1ずつ
+function staffSVG(o){
+  const W=230,H=120,base=86,sp=5,y=s=>base-s*sp;
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="五線譜">`;
+  for(let i=0;i<5;i++) s+=`<line x1="6" x2="${W-6}" y1="${y(i*2)}" y2="${y(i*2)}" stroke="#333" stroke-width="1.2"/>`;
+  s+=`<text x="8" y="${y(0)+11}" font-size="62" font-family="'Segoe UI Symbol','Noto Music','Apple Symbols',serif">&#x1D11E;</text>`;
+  const SH=[8,5,9,6,3,7,4], FL=[4,7,3,6,2,5,1];
+  if(o.acc){
+    const pos=o.acc==='#'?SH:FL;
+    for(let i=0;i<o.n;i++){
+      const x=54+i*12, yy=y(pos[i]);
+      s+= o.acc==='#'
+        ? `<text x="${x}" y="${yy+7}" font-size="22" font-family="serif" fill="#111" text-anchor="middle">♯</text>`
+        : `<text x="${x}" y="${yy+6.5}" font-size="24" font-family="serif" fill="#111" text-anchor="middle">♭</text>`;
+    }
+  }
+  if(o.notes){
+    const x=150;
+    o.notes.forEach(st=>{
+      if(st<=-2) for(let l=-2;l>=st;l-=2) s+=`<line x1="${x-13}" x2="${x+13}" y1="${y(l)}" y2="${y(l)}" stroke="#333" stroke-width="1.2"/>`;
+      s+=`<ellipse cx="${x}" cy="${y(st)}" rx="7.2" ry="4.8" fill="none" stroke="#111" stroke-width="2.6" transform="rotate(-25 ${x} ${y(st)})"/>`;
+    });
+  }
+  return s+'</svg>';
+}
+
+/* ===================== 音（WebAudio） ===================== */
+let AC=null;
+function ac(){ if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); return AC; }
+const mf=m=>440*Math.pow(2,(m-69)/12);
+function tone(m,t,d,v=.18,type='triangle'){
+  const a=ac(),o=a.createOscillator(),g=a.createGain();
+  o.type=type;o.frequency.value=mf(m);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+d);
+  o.connect(g).connect(a.destination);o.start(t);o.stop(t+d+.05);
+}
+function playChord(ms){
+  const a=ac(),t=a.currentTime+.05;
+  ms.forEach((m,i)=>tone(m,t+i*.32,.9));
+  ms.forEach(m=>tone(m,t+ms.length*.32+.15,1.8,.14));
+}
+function click(t,strong){
+  const a=ac(),o=a.createOscillator(),g=a.createGain();
+  o.type='square';o.frequency.value=strong?1500:900;
+  g.gain.setValueAtTime(strong?.35:.12,t);g.gain.exponentialRampToValueAtTime(.001,t+.06);
+  o.connect(g).connect(a.destination);o.start(t);o.stop(t+.08);
+}
+function playMeter(kind){ // '68' or '24'
+  const a=ac(),t0=a.currentTime+.1,dt=.19,group=kind==='68'?3:2,per=kind==='68'?6:4;
+  for(let i=0;i<per*3;i++) click(t0+i*dt,i%group===0 && (i%per===0||i%per===group));
+}
+const CH={C:[60,64,67],F:[65,69,72],G:[67,71,74],G7:[67,71,74,77],Am:[57,60,64],Dm:[62,65,69],Em:[64,67,71]};
+
+/* ===================== 問題 ===================== */
+// 4択: {id,u,tag,q,a,d:[誤答3],e,fig?}  並べかえ: {id,u,tag,type:'order',q,items:[正しい順],e}
+// 生成: {id,u,tag,gen:()=>4択の形}
+const Q = [
+/* ---------- 楽典 3年 ---------- */
+{id:'r01',u:'riron',tag:'和音',q:'高さのちがう2つ以上の音が、同時にひびくことを何という？',a:'和音',d:['音程','音階','旋律'],e:'高さのちがう音が同時にひびく＝和音。'},
+{id:'r02',u:'riron',tag:'和音',q:'ある音の上に3度ずつ音を重ねた、3つの音でできた和音を何という？',a:'三和音',d:['属七の和音','主要三和音','オクターブ'],e:'3度ずつ重ねた3音＝三和音。'},
+{id:'r03',u:'riron',tag:'和音',q:'基本形の三和音で、いちばん下の音を何という？',a:'根音',d:['第3音','第5音','主音'],e:'下から 根音・第3音・第5音。'},
+{id:'r04',u:'riron',tag:'和音',q:'三和音「ド・ミ・ソ」の「ソ」を何という？',a:'第5音',d:['根音','第3音','第7音'],e:'根音ドから数えて5度上 → 第5音。ミは第3音。'},
+{id:'r05',u:'riron',tag:'主要三和音',q:'ハ長調の 主和音（Ⅰ）の構成音は？',a:'ド・ミ・ソ',d:['ファ・ラ・ド','ソ・シ・レ','ラ・ド・ミ'],e:'Ⅰ＝音階の1番目の音ドを根音にして、1つとばしで重ねる → ド・ミ・ソ（コードネームは C）。'},
+{id:'r06',u:'riron',tag:'主要三和音',q:'ハ長調の 下属和音（Ⅳ）の構成音は？',a:'ファ・ラ・ド',d:['ド・ミ・ソ','ソ・シ・レ','レ・ファ・ラ'],e:'Ⅳ＝音階の4番目の音ファを根音にして重ねる → ファ・ラ・ド（コードネームは F）。'},
+{id:'r07',u:'riron',tag:'主要三和音',q:'ハ長調の 属和音（Ⅴ）の構成音は？',a:'ソ・シ・レ',d:['ド・ミ・ソ','ファ・ラ・ド','ミ・ソ・シ'],e:'Ⅴ＝音階の5番目の音ソを根音にして重ねる → ソ・シ・レ（コードネームは G）。'},
+{id:'r08',u:'riron',tag:'主要三和音',q:'Ⅰ・Ⅳ・Ⅴ の3つの和音をまとめて何という？',a:'主要三和音',d:['属七の和音','長三和音','平行調'],e:'Ⅰ主和音・Ⅳ下属和音・Ⅴ属和音＝主要三和音。'},
+{id:'r09',u:'riron',tag:'主要三和音',q:'Ⅴ の和音の名前は？',a:'属和音',d:['主和音','下属和音','属七の和音'],e:'Ⅰ主和音／Ⅳ下属和音／Ⅴ属和音。「下属」はⅣ、「属」はⅤ。'},
+{id:'r10',u:'riron',tag:'主要三和音',q:'Ⅳ の和音の名前は？',a:'下属和音',d:['属和音','主和音','短三和音'],e:'Ⅰ主和音／Ⅳ下属和音／Ⅴ属和音。「下属」はⅣ、「属」はⅤ。'},
+{id:'r11',u:'riron',tag:'主要三和音',q:'ハ長調の 属七の和音（Ⅴ7）の構成音は？',a:'ソ・シ・レ・ファ',d:['ソ・シ・レ','ド・ミ・ソ・シ','ファ・ラ・ド・ミ'],e:'属和音ソシレに、根音から7度上のファをたす。'},
+{id:'r12',u:'riron',tag:'主要三和音',q:'「落ち着いて終わった」感じになりやすい和音の進み方は？',a:'Ⅴ7 → Ⅰ',d:['Ⅰ → Ⅴ7','Ⅰ → Ⅳ','Ⅳ → Ⅴ'],e:'Ⅴ7 → Ⅰ で落ち着いて終わる（曲の終わりによく使う）。'},
+{id:'r13',u:'riron',tag:'長三和音・短三和音',q:'明るいひびきの三和音を何という？',a:'長三和音',d:['短三和音','属七の和音','減三和音'],e:'長三和音＝明るい（C など）、短三和音＝暗い（Cm など）。'},
+{id:'r14',u:'riron',tag:'長三和音・短三和音',q:'長三和音で、根音から第3音までは半音いくつ？',a:'4つ',d:['3つ','5つ','7つ'],e:'長三和音＝半音4つ、短三和音＝半音3つ。第5音はどちらも半音7つ。'},
+{id:'r15',u:'riron',tag:'長三和音・短三和音',q:'短三和音で、根音から第3音までは半音いくつ？',a:'3つ',d:['4つ','2つ','7つ'],e:'短三和音＝半音3つ（長三和音は4つ）。'},
+{id:'r16',u:'riron',tag:'長三和音・短三和音',q:'三和音の根音から第5音までは、半音いくつ？（長三和音・短三和音とも）',a:'7つ',d:['4つ','5つ','8つ'],e:'第5音はどちらも半音7つ。ちがうのは第3音。'},
+{id:'r17',u:'riron',tag:'コードネーム',q:'コードネームの大文字（C・F・G など）が表すのは？',a:'根音の英語音名',d:['調の名前','和音の第5音','曲の拍子'],e:'大文字＝根音の英語音名。C＝ド、F＝ファ、G＝ソ、A＝ラ、D＝レ。'},
+{id:'r18',u:'riron',tag:'コードネーム',q:'コードネームの「m」（Am・Dm など）が表すのは？',a:'短三和音',d:['長三和音','根音を半音上げる','音を短く切る'],e:'m（マイナー）＝短三和音。'},
+{id:'r19',u:'riron',tag:'コードネーム',q:'G7 の「7」が表すのは？',a:'根音から7度上（短7度）の音をたす',d:['7拍のばす','7つの音で弾く','根音から7度下の音をたす'],e:'G7＝ソシレ＋ファ（ソから7度上）。'},
+{id:'r20',u:'riron',tag:'調の見分け方',q:'♯の調号の長調は、どうやって主音を見つける？',a:'最後の♯のすぐ上の音が主音',d:['最初の♯の音が主音','最後の♯のすぐ下の音が主音','♯の数だけドから上がった音が主音'],e:'例：♯2つ（ファ♯・ド♯）→ ド♯のすぐ上のレ → ニ長調。'},
+{id:'r21',u:'riron',tag:'調の見分け方',q:'♭の調号の長調は、どうやって主音を見つける？',a:'最後から2つ目の♭の音が主音',d:['最後の♭の音が主音','最初の♭のすぐ上の音が主音','♭の数だけドから下がった音が主音'],e:'例：♭3つ（シ♭・ミ♭・ラ♭）→ ミ♭ → 変ホ長調。♭1つはヘ長調と覚える。'},
+{id:'r22',u:'riron',tag:'調の見分け方',q:'同じ調号の短調の主音は、長調の主音から見て？',a:'短3度下',d:['長3度上','完全5度上','半音下'],e:'例：ハ長調（ド）→ 短3度下のラ → イ短調。'},
+{id:'r23',u:'riron',tag:'調の見分け方',q:'「変ロ長調」の「変」の意味は？',a:'♭（半音下げる）',d:['♯（半音上げる）','♮（もとにもどす）','短調のこと'],e:'変＝♭、嬰＝♯。変ロ長調＝シ♭が主音。'},
+{id:'r24',u:'riron',tag:'調の見分け方',q:'「嬰ヘ短調」の「嬰」の意味は？',a:'♯（半音上げる）',d:['♭（半音下げる）','♮（もとにもどす）','長調のこと'],e:'嬰＝♯、変＝♭。嬰ヘ短調＝ファ♯が主音。'},
+{id:'r25',u:'riron',tag:'移調・転調',q:'曲全体を、音程の関係を変えずに別の高さ（調）に移すことを何という？',a:'移調',d:['転調','変奏','反復'],e:'移調＝曲全体を別の調に移す。転調＝曲の途中で調が変わる。'},
+{id:'r26',u:'riron',tag:'移調・転調',q:'曲の途中で調が変わることを何という？',a:'転調',d:['移調','終止','反復'],e:'転調＝曲の途中で調が変わる。（アイーダの行進曲にも出てくる！）'},
+{id:'r27',u:'riron',tag:'移調・転調',q:'移調をする理由として正しいものは？',a:'歌いやすい高さや、楽器の音域に合わせるため',d:['曲を速くするため','拍子を変えるため','旋律を別の曲にするため'],e:'移調しても旋律の形（音程の関係）は変わらない。高さだけが変わる。'},
+{id:'r28',u:'riron',tag:'形式',q:'フレーズ（旋律のひとまとまり）は、多くの場合 何小節？',a:'4小節',d:['1小節','3小節','6小節'],e:'フレーズは多くの場合4小節。'},
+{id:'r29',u:'riron',tag:'形式',q:'A B の2つの大きなまとまりでできた形式は？',a:'二部形式',d:['三部形式','ロンド形式','ソナタ形式'],e:'A B＝二部形式。「ふるさと」（a a\' b a\'）も二部形式。'},
+{id:'r30',u:'riron',tag:'形式',q:'A B A の形式は？',a:'三部形式',d:['二部形式','ロンド形式','ソナタ形式'],e:'A B A＝三部形式（最初のAがもどってくる）。'},
+{id:'r31',u:'riron',tag:'形式',q:'A B A C A の形式は？',a:'ロンド形式',d:['三部形式','二部形式','ソナタ形式'],e:'Aが何度ももどってくる＝ロンド形式。'},
+{id:'r32',u:'riron',tag:'形式',q:'提示部・展開部・再現部 でできている形式は？',a:'ソナタ形式',d:['ロンド形式','三部形式','二部形式'],e:'ソナタ形式＝提示部 → 展開部 → 再現部。'},
+{id:'r33',u:'riron',tag:'形式',type:'order',q:'ソナタ形式の部分を、演奏される順に並べよう',items:['提示部','展開部','再現部'],e:'提示部 → 展開部 → 再現部'},
+{id:'r34',u:'riron',tag:'形式',q:'「ふるさと」（a a\' b a\'）は何形式？',a:'二部形式',d:['三部形式','ロンド形式','ソナタ形式'],e:'a a\'＝前半（A）、b a\'＝後半（B）の2つのまとまり → 二部形式。'},
+{id:'r35',u:'riron',tag:'音楽の要素',q:'「音の重なり方（旋律と伴奏の関係など）」を表す音楽の要素は？',a:'テクスチュア',d:['音色','形式','速度'],e:'音楽の要素：音色・リズム・速度・旋律・テクスチュア・強弱・形式・構成。'},
+{id:'r36',u:'riron',tag:'音楽の要素',q:'「楽器や声がもつ、音の感じ」を表す音楽の要素は？',a:'音色',d:['旋律','強弱','構成'],e:'鑑賞文でも「〇〇の音色が〜」と使える。'},
+/* 調号（五線つき） */
+...[['',0,'ハ長調','イ短調'],['#',1,'ト長調','ホ短調'],['#',2,'ニ長調','ロ短調'],['#',3,'イ長調','嬰ヘ短調'],['b',1,'ヘ長調','ニ短調'],['b',2,'変ロ長調','ト短調'],['b',3,'変ホ長調','ハ短調']].flatMap((k,i,arr)=>{
+  const majors=arr.map(x=>x[2]),minors=arr.map(x=>x[3]);
+  const lab=k[1]?`${k[0]==='#'?'♯':'♭'}${k[1]}つ`:'なし';
+  const pick=(list,ans)=>shuffle(list.filter(x=>x!==ans)).slice(0,3);
+  const ex={'#':'最後の♯のすぐ上が長調の主音','b':'最後から2つ目の♭が長調の主音（♭1つはヘ長調）','':'調号なし'}[k[0]];
+  return [
+    {id:'key-ma-'+i,u:'riron',tag:'調号と調',fig:{acc:k[0],n:k[1]},gen(){return {q:`この調号（${lab}）の 長調 は？`,a:k[2],d:pick(majors,k[2]),e:`${ex} → ${k[2]}。平行調は${k[3]}。`};}},
+    {id:'key-mi-'+i,u:'riron',tag:'調号と調',fig:{acc:k[0],n:k[1]},gen(){return {q:`この調号（${lab}）の 短調 は？`,a:k[3],d:pick(minors,k[3]),e:`長調は${k[2]} → その主音の短3度下が短調の主音 → ${k[3]}。`};}}
+  ];
+}),
+/* コードネームと構成音 */
+...[['C','ド・ミ・ソ',[-2,0,2]],['F','ファ・ラ・ド',[1,3,5]],['G','ソ・シ・レ',[2,4,6]],['G7','ソ・シ・レ・ファ',[2,4,6,8]],['Am','ラ・ド・ミ',[3,5,7]],['Dm','レ・ファ・ラ',[-1,1,3]]].flatMap((c,i,arr)=>{
+  const names=arr.map(x=>x[0]),tones=arr.map(x=>x[1]);
+  const kind=c[0].includes('m')?'短三和音':c[0].includes('7')?'属七の和音（G7）':'長三和音';
+  return [
+    {id:'cn-'+c[0],u:'riron',tag:'コードネーム',gen(){return {q:`コードネーム ${c[0]} の構成音は？`,a:c[1],d:shuffle(tones.filter(x=>x!==c[1])).slice(0,3),e:`${c[0]}＝${c[1]}（${kind}）。`};}},
+    {id:'cs-'+c[0],u:'riron',tag:'コードネーム',fig:{notes:c[2]},audio:{chord:c[0]},gen(){return {q:'この和音のコードネームは？',a:c[0],d:shuffle(names.filter(x=>x!==c[0])).slice(0,3),e:`下の音から ${c[1]} → ${c[0]}（${kind}）。`};}}
+  ];
+}),
+{id:'listen-chord',u:'riron',tag:'聴き分け',listen:true,gen(){
+  const k=pickOne(['C','F','G','Am','Dm','Em']),maj=!k.includes('m');
+  this.audio={chord:k};
+  return {q:'▶を押して聴こう。この和音は？',a:maj?'長三和音（明るい）':'短三和音（暗い）',d:['長三和音（明るい）','短三和音（暗い）'].filter(x=>x!==(maj?'長三和音（明るい）':'短三和音（暗い）')),e:`鳴ったのは ${k}。${maj?'長三和音＝根音→第3音が半音4つ':'短三和音＝根音→第3音が半音3つ'}。`};
+}},
+/* ---------- 楽典 1・2年の復習 ---------- */
+{id:'f01',u:'riron',tag:'1・2年の復習',q:'ト音記号は、第何線が「ト（ソ）」の音を表す？',a:'第2線',d:['第1線','第3線','第4線'],e:'ト音記号＝第2線がト（ソ）。ヘ音記号＝第4線がヘ（ファ）。'},
+{id:'f02',u:'riron',tag:'1・2年の復習',q:'ヘ音記号は、第何線が「ヘ（ファ）」の音を表す？',a:'第4線',d:['第2線','第3線','第5線'],e:'ヘ音記号の2つの点ではさまれた線＝第4線がヘ。'},
+{id:'f03',u:'riron',tag:'1・2年の復習',q:'「シ」をドイツ語の音名で書くと？',a:'H（ハー）',d:['B（ベー）','C（ツェー）','A（アー）'],e:'ドイツ語でシ＝H。B（ベー）はシ♭のこと。'},
+{id:'f04',u:'riron',tag:'1・2年の復習',q:'「ラ」を日本の音名で書くと？',a:'イ',d:['ハ','ト','ロ'],e:'ドレミファソラシ＝ハニホヘトイロ。イロハはラから。'},
+{id:'f05',u:'riron',tag:'1・2年の復習',q:'長音階の全音・半音の並びは？',a:'全全半全全全半',d:['全半全全半全全','全全全半全全半','半全全全半全全'],e:'長音階＝全全半全全全半。（自然）短音階＝全半全全半全全。'},
+{id:'f06',u:'riron',tag:'1・2年の復習',q:'自然短音階の全音・半音の並びは？',a:'全半全全半全全',d:['全全半全全全半','全全全半全全半','半全全半全全全'],e:'ラから始めると白い鍵盤だけで自然短音階になる。'},
+{id:'f07',u:'riron',tag:'1・2年の復習',q:'ドレミファソラシドで、半音になっているのは？',a:'ミ‐ファ と シ‐ド',d:['ド‐レ と ソ‐ラ','レ‐ミ と ラ‐シ','ファ‐ソ と シ‐ド'],e:'鍵盤で間に黒鍵がないところ＝ミ‐ファ、シ‐ド。'},
+{id:'f08',u:'riron',tag:'1・2年の復習',q:'同じ調号をもつ長調と短調の関係を何という？',a:'平行調',d:['同主調','移調','転調'],e:'例：ハ長調とイ短調は平行調（どちらも調号なし）。'},
+{id:'f09',u:'riron',tag:'1・2年の復習',q:'下のドから上のラまでの音程は？',a:'6度',d:['5度','7度','8度'],e:'両はしをふくめて数える：ド・レ・ミ・ファ・ソ・ラ＝6度。'},
+{id:'f10',u:'riron',tag:'1・2年の復習',q:'付点4分音符は何拍？（4分音符＝1拍）',a:'1拍半',d:['1拍','2拍','3拍'],e:'付点＝もとの半分をたす。1＋0.5＝1拍半。'},
+{id:'f11',u:'riron',tag:'1・2年の復習',q:'付点2分音符は何拍？（4分音符＝1拍）',a:'3拍',d:['2拍','2拍半','4拍'],e:'2＋1＝3拍。'},
+{id:'f12',u:'riron',tag:'1・2年の復習',q:'同じ高さの2つの音をつないで、1つの音にする記号は？',a:'タイ',d:['スラー','テヌート','フェルマータ'],e:'タイ＝同じ高さをつなぐ。スラー＝いくつかの音をなめらかに。'},
+{id:'f13',u:'riron',tag:'1・2年の復習',q:'スタッカートの意味は？',a:'その音を短く切って',d:['音の長さを十分に保って','ほどよくのばす','目立たせて、強調して'],e:'テヌート＝十分に保って、フェルマータ＝ほどよくのばす、アクセント＝目立たせて。'},
+{id:'f14',u:'riron',tag:'1・2年の復習',q:'mf の読み方と意味は？',a:'メッゾ フォルテ／少し強く',d:['メッゾ ピアノ／少し弱く','フォルテ／強く','フォルティッシモ／とても強く'],e:'mp＝メッゾ ピアノ（少し弱く）とセットで覚える。'},
+{id:'f15',u:'riron',tag:'1・2年の復習',type:'order',q:'速度記号を「遅い順」に並べよう',items:['Adagio','Andante','Moderato','Allegro'],e:'Adagio ゆるやかに → Andante 歩くような速さで → Moderato 中ぐらいの速さで → Allegro 速く'},
+{id:'f16',u:'riron',tag:'1・2年の復習',type:'order',q:'強弱記号を「弱い順」に並べよう',items:['pp','p','mp','mf','f','ff'],e:'pp → p → mp → mf → f → ff'},
+{id:'f17',u:'riron',tag:'1・2年の復習',q:'D.S.（ダル セーニョ）の意味は？',a:'セーニョ記号にもどる',d:['はじめにもどる','終わり','だんだん遅く'],e:'D.C.＝はじめにもどる、D.S.＝セーニョ記号にもどる、Fine＝終わり。'},
+{id:'f18',u:'riron',tag:'1・2年の復習',q:'4分の3拍子の意味は？',a:'4分音符を1拍として、1小節に3拍',d:['3分音符を1拍として、1小節に4拍','1小節に4分音符が4つ','4小節で3回くり返す'],e:'下の数字＝1拍にする音符、上の数字＝1小節の拍の数。'},
+{id:'f19',u:'riron',tag:'1・2年の復習',q:'rit. の意味は？',a:'だんだん遅く',d:['もとの速さで','だんだん強く','だんだん弱く'],e:'rit.＝だんだん遅く、a tempo＝もとの速さで。'},
+
+/* ---------- ブルタバ ---------- */
+{id:'v01',u:'vltava',tag:'作曲者',q:'「ブルタバ」の作曲者は？',a:'スメタナ',d:['ヴェルディ','ドヴォルザーク','ベートーヴェン'],e:'ベドルジハ・スメタナ（1824〜1884）。'},
+{id:'v02',u:'vltava',tag:'作曲者',q:'スメタナはどこの国の作曲家？',a:'チェコ',d:['イタリア','ドイツ','ロシア'],e:'チェコ（当時のボヘミア）の作曲家。ブルタバはチェコを流れる川。'},
+{id:'v03',u:'vltava',tag:'作品',q:'「ブルタバ」と「モルダウ」の関係は？',a:'同じ川の名前（チェコ語とドイツ語）',d:['まったく別の2つの曲','ブルタバは川、モルダウは町の名前','モルダウはスメタナのあだ名'],e:'ブルタバ＝チェコ語、モルダウ＝ドイツ語。同じ曲・同じ川。'},
+{id:'v04',u:'vltava',tag:'作品',q:'「ブルタバ」は、何という連作の何曲目？',a:'「わが祖国」の第2曲',d:['「わが祖国」の第1曲','「わが祖国」の第6曲','「新世界より」の第2楽章'],e:'連作交響詩「わが祖国」（全6曲）の第2曲。第1曲は「ヴィシェフラト（高い城）」。'},
+{id:'v05',u:'vltava',tag:'作品',q:'連作「わが祖国」は全部で何曲？',a:'6曲',d:['2曲','4曲','9曲'],e:'交響詩6曲の連作。'},
+{id:'v06',u:'vltava',tag:'交響詩',q:'「交響詩」とは？',a:'オーケストラで風景や物語などを表す、ひと続きの器楽作品',d:['詩を朗読しながら演奏する曲','独唱と合唱で物語を進める舞台芸術','4つの楽章でできた交響曲'],e:'交響詩には歌詞も歌声もない。音の変化で風景や出来事を伝える。'},
+{id:'v07',u:'vltava',tag:'交響詩',q:'題名や物語を手がかりにして聴く音楽を何という？',a:'標題音楽',d:['絶対音楽','総合芸術','民謡'],e:'標題＝耳に見えない景色を考えるための道しるべ。'},
+{id:'v08',u:'vltava',tag:'作曲者',q:'スメタナが「ブルタバ」を作曲したときのようすは？',a:'すでに耳が聴こえなくなっていた',d:['オペラ歌手として活躍していた','イタリアに留学していた','まだ10代だった'],e:'1874年に聴力を失った。それまでの経験から、響きを心の中で組み立てて楽譜に書いた。'},
+{id:'v09',u:'vltava',tag:'作曲者',q:'「ブルタバ」が作曲されたのは何年？',a:'1874年',d:['1824年','1871年','1884年'],e:'1824年 生まれ／1874年 ブルタバ作曲／1884年 亡くなる。（1871年はアイーダ初演）'},
+{id:'v10',u:'vltava',tag:'場面と音楽',q:'曲のはじめ「2つの源流」を表す楽器は？',a:'フルートとクラリネット',d:['トランペットとトロンボーン','ティンパニとシンバル','ホルンとチューバ'],e:'フルートの細かく動く音に、クラリネットが加わる → 2つの流れが合わさる。'},
+{id:'v11',u:'vltava',tag:'川の主題',q:'川の主題（有名な旋律）の拍子は？',a:'8分の6拍子',d:['4分の2拍子','4分の3拍子','4分の4拍子'],e:'8分の6拍子＝8分音符3つずつのまとまりが2つ（複合二拍子）。'},
+{id:'v12',u:'vltava',tag:'川の主題',q:'8分の6拍子の感じ方として正しいものは？',a:'8分音符3つずつのまとまりが2つ（大きく2拍）',d:['8分音符2つずつのまとまりが3つ','3拍子が2小節ならんだもの','1小節に4分音符が6つ'],e:'1・2・3、4・5・6 と、大きく2つで感じる（複合二拍子）。'},
+{id:'v13',u:'vltava',tag:'川の主題',q:'最初に出てくる川の主題の調は？',a:'ホ短調',d:['ホ長調','ハ長調','イ短調'],e:'はじめはホ短調。終わり近くの「広大な流れ」でホ長調になる。'},
+{id:'v14',u:'vltava',tag:'川の主題',q:'終わり近くの「広大な流れ」で、川の主題の調はどう変わる？',a:'ホ短調 → ホ長調',d:['ホ長調 → ホ短調','ハ長調 → イ短調','変わらない'],e:'同じホを主音にしたまま長調へ。厚い響き・力強い演奏も重なって、広がりや晴れやかさを感じる。'},
+{id:'v15',u:'vltava',tag:'川の主題',q:'川の主題を中心になって演奏する楽器のなかまは？',a:'弦楽器',d:['金管楽器','打楽器','木管楽器だけ'],e:'弦楽器を中心とした長い旋律と、まわりで続く細かい動き（伴奏）が川を表す。'},
+{id:'v16',u:'vltava',tag:'場面と音楽',q:'「森の狩り」の場面で、狩りの合図のように活躍する楽器は？',a:'ホルン',d:['フルート','ハープ','コントラバス'],e:'ホルンは昔、狩りの合図にも使われた楽器。'},
+{id:'v17',u:'vltava',tag:'場面と音楽',q:'「村の結婚式」の音楽は？',a:'4分の2拍子の、ポルカ風のはずむ踊り',d:['8分の6拍子の、ゆったりした子守歌','4分の3拍子のワルツ','合唱が歌うお祝いの歌'],e:'ポルカ＝2拍子系の踊り。歌詞はない。'},
+{id:'v18',u:'vltava',tag:'場面と音楽',q:'「月光、水の精の踊り」の場面の特ちょうは？',a:'弦楽器の弱く長くのびる音で、静かで幻想的',d:['金管楽器の強くはっきりした合図','細かい音が密集して激しい','打楽器だけでリズムを刻む'],e:'弱く柔らかい弦の長い音、ハープの音色なども手がかり。'},
+{id:'v19',u:'vltava',tag:'場面と音楽',q:'「聖ヨハネの急流」の場面の特ちょうは？',a:'細かい音が密集し、強い響きが重なって激しい',d:['弦楽器の弱く長い音で静か','フルート1本だけで細く流れる','2拍子の踊りのリズム'],e:'「速くなった」だけでなく、細かい音・厚い重なり・強い響きで激しさを出している。'},
+{id:'v20',u:'vltava',tag:'場面と音楽',q:'プラハの城「ヴィシェフラト」の場面で出てくる主題は？',a:'「わが祖国」第1曲の主題',d:['アイーダの凱旋行進曲','「森の狩り」のホルンの合図','「村の結婚式」のポルカ'],e:'第1曲「ヴィシェフラト」の主題が出てきて、連作どうしをつなぐ。'},
+{id:'v21',u:'vltava',tag:'場面と音楽',type:'order',q:'「ブルタバ」の場面を、曲の順に並べよう',items:['2つの源流','川の主題','森の狩り','村の結婚式','月光、水の精の踊り','聖ヨハネの急流','広大な流れ'],e:'源流 → 川の主題 → 森の狩り → 村の結婚式 → 月光、水の精の踊り →（川の主題）→ 聖ヨハネの急流 → 広大な流れ → ヴィシェフラト → 遠ざかる'},
+{id:'v22',u:'vltava',tag:'場面と音楽',q:'曲の最後はどう終わる？',a:'遠ざかるように静かになったあと、強い和音2つで終わる',d:['だんだん弱くなって、消えるように終わる','合唱が加わって終わる','急流の場面のまま突然終わる'],e:'静かになっても終わりではない。最後に強い和音が2つ。'},
+{id:'v23',u:'vltava',tag:'作品',q:'ブルタバ川の流れとして正しいものは？',a:'プラハを通り、エルベ川（ラベ川）に合流する',d:['プラハで海に流れ出る','ナイル川に合流する','ドナウ川の源流になる'],e:'プラハは終点ではない。エルベ川（チェコ語でラベ川）へ合流する。'},
+{id:'v24',u:'vltava',tag:'聴き分け',listen:true,gen(){
+  const k=pickOne(['68','24']);
+  this.audio={meter:k};
+  const A='8分の6拍子（3つずつ×2）',B='4分の2拍子（2つずつ×2）';
+  return {q:'▶を押して聴こう。強いクリックのまとまり方は？',a:k==='68'?A:B,d:[k==='68'?B:A],e:k==='68'?'3つずつのまとまりが2つ → 川の主題の8分の6拍子。':'2つずつのまとまり → 村の結婚式（ポルカ）の4分の2拍子。'};
+}},
+{id:'v25',u:'vltava',tag:'鑑賞文',q:'鑑賞文で「感じたこと」の根拠として書くとよいものは？',a:'聴こえた音の特徴（楽器・強弱・リズム・重なりなど）',d:['「すごかった」という感想だけ','場面の名前だけ','演奏していた人数だけ'],e:'型：「〇〇の場面で、△△（音の特徴）なので、□□のように感じた。」'},
+
+/* ---------- アイーダ ---------- */
+{id:'a01',u:'aida',tag:'作曲者',q:'オペラ「アイーダ」の作曲者は？',a:'ヴェルディ',d:['スメタナ','モーツァルト','チャイコフスキー'],e:'ジュゼッペ・ヴェルディ（1813〜1901）。'},
+{id:'a02',u:'aida',tag:'作曲者',q:'ヴェルディはどこの国の作曲家？',a:'イタリア',d:['チェコ','エジプト','フランス'],e:'イタリアを代表するオペラ作曲家。'},
+{id:'a03',u:'aida',tag:'オペラ',q:'オペラ（歌劇）とは？',a:'歌を中心に、音楽で物語を進める舞台芸術',d:['オーケストラだけで物語を表す器楽作品','セリフだけで進める演劇','音楽に合わせて踊るだけの舞台'],e:'セリフも気持ちもほとんど歌で表す。'},
+{id:'a04',u:'aida',tag:'オペラ',q:'オペラのように、音楽・演劇・舞踊・文学・美術などが集まった芸術を何という？',a:'総合芸術',d:['標題音楽','交響詩','民俗芸能'],e:'たくさんの芸術が集まる＝総合芸術。'},
+{id:'a05',u:'aida',tag:'オペラ',q:'1人で歌うことを何という？',a:'独唱',d:['重唱','合唱','斉唱'],e:'独唱＝1人、重唱＝2〜数人でそれぞれのパート、合唱＝大勢。'},
+{id:'a06',u:'aida',tag:'オペラ',q:'2〜数人が、それぞれのパートを歌うことを何という？',a:'重唱',d:['独唱','合唱','輪唱'],e:'ちがう気持ちを同時に歌える。'},
+{id:'a07',u:'aida',tag:'オペラ',q:'独唱の聴かせどころの歌を何という？',a:'アリア',d:['ファンファーレ','ポルカ','フレーズ'],e:'独唱の聴かせどころ＝アリア。'},
+{id:'a08',u:'aida',tag:'作品',q:'「アイーダ」が作られたきっかけは？',a:'スエズ運河の開通を記念して、カイロにできた歌劇場で上演するため',d:['イタリアの国王の結婚式で上演するため','チェコの独立を記念するため','パリの万国博覧会で上演するため'],e:'スエズ運河開通（1869年）→ カイロに歌劇場 → ヴェルディに依頼 → 1871年カイロで初演。'},
+{id:'a09',u:'aida',tag:'作品',q:'「アイーダ」が初演されたのは何年？',a:'1871年',d:['1869年','1874年','1813年'],e:'1871年（日本では明治4年）。1869年はスエズ運河開通、1874年はブルタバ作曲。'},
+{id:'a10',u:'aida',tag:'作品',q:'「アイーダ」が初演された都市は？',a:'カイロ',d:['ミラノ','プラハ','ローマ'],e:'エジプトの首都カイロ。'},
+{id:'a11',u:'aida',tag:'作品',q:'「アイーダ」の舞台は？',a:'古代エジプト',d:['中世のイタリア','古代ギリシャ','近代のチェコ'],e:'敵どうしの国の王女アイーダと将軍ラダメスの悲しい恋。'},
+{id:'a12',u:'aida',tag:'声の種類',type:'order',q:'女声の種類を「高い順」に並べよう',items:['ソプラノ','メゾ・ソプラノ','アルト'],e:'ソプラノ（いちばん高い）→ メゾ・ソプラノ → アルト'},
+{id:'a13',u:'aida',tag:'声の種類',type:'order',q:'男声の種類を「高い順」に並べよう',items:['テノール','バリトン','バス'],e:'テノール（いちばん高い）→ バリトン → バス'},
+{id:'a14',u:'aida',tag:'声の種類',q:'男声は、同じパートの女声と比べて およそどれくらい低い？',a:'およそ1オクターブ',d:['およそ半音','およそ3度','およそ2オクターブ'],e:'ソプラノとテノールなど、男声は女声よりおよそ1オクターブ低い。'},
+{id:'a15',u:'aida',tag:'登場人物',q:'アイーダ（エチオピアの王女）の声の種類は？',a:'ソプラノ',d:['メゾ・ソプラノ','アルト','テノール'],e:'ヒロインは高い声のソプラノ。'},
+{id:'a16',u:'aida',tag:'登場人物',q:'ラダメス（エジプトの将軍）の声の種類は？',a:'テノール',d:['バリトン','バス','メゾ・ソプラノ'],e:'恋をする主人公＝男声でいちばん高いテノール。'},
+{id:'a17',u:'aida',tag:'登場人物',q:'アムネリス（エジプトの王女）の声の種類は？',a:'メゾ・ソプラノ',d:['ソプラノ','アルト','バリトン'],e:'アイーダ（ソプラノ）の恋がたき。'},
+{id:'a18',u:'aida',tag:'登場人物',q:'アモナスロ（エチオピア王・アイーダの父）の声の種類は？',a:'バリトン',d:['テノール','バス','ソプラノ'],e:'父親役は低めの声。'},
+{id:'a19',u:'aida',tag:'登場人物',q:'エジプト王（アムネリスの父）の声の種類は？',a:'バス',d:['テノール','バリトン','アルト'],e:'威厳のある王＝いちばん低いバス。'},
+{id:'a20',u:'aida',tag:'登場人物',q:'アイーダとラダメスの関係は？',a:'敵どうしの国の王女と将軍が、ひそかに愛し合う',d:['兄と妹','王と家来','アイーダの片思い'],e:'アムネリスもラダメスが好き（片思い）。'},
+{id:'a21',u:'aida',tag:'登場人物',q:'王・父親の役に多い声の特ちょうは？',a:'低く重い声（威厳・年長・落ち着き）',d:['高く輝く声（若さ・情熱）','ささやくような小さい声','セリフだけで歌わない'],e:'高く輝く声＝若さ・情熱 → 恋をする2人。声の高さも「演出」の一つ。'},
+{id:'a22',u:'aida',tag:'第2幕第2場',q:'「アイーダ」は全何幕？',a:'4幕',d:['2幕','3幕','5幕'],e:'全4幕。鑑賞したのは第2幕第2場（テーベの城門・凱旋の場面）。'},
+{id:'a23',u:'aida',tag:'第2幕第2場',type:'order',q:'第2幕第2場の4つの場面を順に並べよう',items:['凱旋を祝う大合唱','凱旋の行進曲','バレエ','父との再会・王の宣言'],e:'大合唱 → 行進曲（アイーダ・トランペット）→ バレエ → 重唱と合唱'},
+{id:'a24',u:'aida',tag:'第2幕第2場',q:'凱旋の行進曲で、舞台の上で吹かれる細長いトランペットを何という？',a:'アイーダ・トランペット',d:['ナチュラル・ホルン','トロンボーン','コルネット'],e:'楽器の見た目も演出の一つ。'},
+{id:'a25',u:'aida',tag:'第2幕第2場',q:'行進曲で、別のトランペット隊が同じ旋律をくり返すとき、調はどう変わる？',a:'変イ長調 → ロ長調（高い調へ）',d:['ロ長調 → 変イ長調（低い調へ）','ホ短調 → ホ長調','調は変わらない'],e:'曲の途中で調が変わる＝転調。さらに輝かしくなる。'},
+{id:'a26',u:'aida',tag:'第2幕第2場',q:'凱旋を祝う大合唱の強弱は？',a:'ff（フォルティッシモ）',d:['pp（ピアニッシモ）','mp（メッゾ ピアノ）','p（ピアノ）'],e:'大勢の声が力強く堂々と → 国じゅうが勝利を喜ぶ熱気。'},
+{id:'a27',u:'aida',tag:'第2幕第2場',q:'大合唱の速度 Allegro maestoso の意味は？',a:'速く、荘厳に',d:['ゆるやかに、悲しげに','歩くような速さで','だんだん遅く'],e:'アレグロ・マエストーソ＝速く、荘厳に。'},
+{id:'a28',u:'aida',tag:'第2幕第2場',q:'バレエの場面の音楽の特ちょうは？',a:'歌はなく、オーケストラの音楽に合わせて踊る',d:['合唱だけで踊りの伴奏をする','アイーダが独唱しながら踊る','楽器は使わず手拍子で踊る'],e:'踊りの動きと、音楽のリズム・速さ・強弱が合っているかに注目。'},
+{id:'a29',u:'aida',tag:'第2幕第2場',q:'音楽と舞踊を軸にした舞台芸術「バレエ」の例として教科書にある作品は？',a:'チャイコフスキー「白鳥の湖」',d:['スメタナ「ブルタバ」','ヴェルディ「アイーダ」','「ふるさと」'],e:'バレエ＝音楽と舞踊を軸にした舞台芸術。'},
+{id:'a30',u:'aida',tag:'第2幕第2場',q:'場面4で、エジプト王が宣言したことは？',a:'ラダメスをアムネリスと結婚させ、後継者にする',d:['アイーダを女王にする','ラダメスを地下ろうに閉じこめる','エチオピアと再び戦争をする'],e:'アイーダは絶望、アムネリスは大喜び、ラダメスは苦しむ。'},
+{id:'a31',u:'aida',tag:'第2幕第2場',q:'場面4で、王の宣言を聞いたアイーダの気持ちは？',a:'絶望',d:['大喜び','安心','怒りに燃えて復讐を誓う'],e:'アムネリス＝大喜び、ラダメス＝心の中で苦しむ、王・民衆＝勝利を祝う。'},
+{id:'a32',u:'aida',tag:'第2幕第2場',q:'場面4のように、いくつもの人物が ちがう気持ちを同時に 歌う表現が生まれるのは？',a:'重唱と合唱が重なり合うから',d:['全員が同じ旋律を斉唱するから','オーケストラだけになるから','セリフで順番に話すから'],e:'セリフ劇ではできない、オペラならではの表現。'},
+{id:'a33',u:'aida',tag:'あらすじ',q:'物語の最後、ラダメスとアイーダはどうなる？',a:'地下ろうで、永遠の愛を誓いながら息絶える',d:['エチオピアに逃げて結婚する','ラダメスがエジプト王になる','アイーダがアムネリスと和解する'],e:'ラダメスは進軍路をもらした罪で地下ろうへ。そこにアイーダが待っていた。'},
+{id:'a34',u:'aida',tag:'あらすじ',q:'ラダメスが捕らえられた理由は？',a:'アイーダにエジプト軍の進む道を答え、それをアモナスロに聞かれたから',d:['戦争に負けたから','アムネリスとの結婚をことわったから','王の命令にそむいて逃げたから'],e:'第3幕（ナイル川の岸辺）の出来事。'},
+{id:'a35',u:'aida',tag:'鑑賞文',q:'「見どころ・聴きどころ」を伝える文として、いちばんよいものは？',a:'場面2で、長いトランペットの明るく強い音が兵士の行進と合わさり、勝利の誇らしさが伝わる',d:['場面2がすごかった','トランペットが長かった','行進曲がいちばん好き'],e:'型：場面 ＋ 音楽の特徴 ＋ 舞台のようす・気持ち ＋ どんな感じ。'}
+];
+
+/* ===================== まとめ ===================== */
+// まとめ専用の見た目と「かくす」機能は、ここ（まとめのデータ側）に置いている。
+// 先頭の<style>と「保存」より後ろは、美術・技術のテスト勉強アプリのビルドが切り出して使うので変えない。
+document.head.insertAdjacentHTML('beforeend',`<style>
+.map{background:#fff;border:2px solid var(--c);border-radius:14px;padding:10px 14px;margin-bottom:12px;font-size:15px}
+.map ol{margin:4px 0 0;padding-left:22px}
+.trap{background:#fdeeee;border:1px solid #efc2bd;border-radius:10px;padding:8px 12px;font-size:14px;margin-top:8px}
+.sum p{margin:6px 0}
+table.t.l td{text-align:left}
+.sum .ng{color:var(--ng);font-weight:bold}.sum .okc{color:var(--ok);font-weight:bold}
+.hidebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.hidek .k{color:transparent;background:var(--hl);border-radius:4px;cursor:pointer;user-select:none}
+.hidek .k.open{color:inherit}
+.rel{text-align:center;margin:6px 0}.rel svg{max-width:100%;height:auto}
+</style>`);
+function toggleHide(b){const w=b.parentNode.parentNode,on=w.classList.toggle('hidek');
+  b.textContent=on?'👀 語句を見せる':'🙈 マーカーの語句をかくす';if(!on)w.querySelectorAll('.k.open').forEach(k=>k.classList.remove('open'));}
+document.addEventListener('click',e=>{const k=e.target.closest&&e.target.closest('.hidek .k');if(k)k.classList.toggle('open');});
+const HIDEBAR=`<div class="hidebar"><button class="btn" onclick="toggleHide(this)">🙈 マーカーの語句をかくす</button><span class="mini">かくしたあと、タップすると1つずつ見られます</span></div>`;
+const chordFig=n=>staffSVG({notes:n}).replace('width="230" height="120"','width="120" height="63"');
+const REL=`<div class="rel"><svg viewBox="0 0 560 200" width="560" role="img" aria-label="登場人物の関係図" font-family="inherit">
+<rect x="6" y="6" width="364" height="188" rx="12" fill="#fbf3e6" stroke="#e0cfae"/><text x="18" y="26" font-size="13" fill="#8a6a2f" font-weight="bold">エジプト</text>
+<rect x="382" y="6" width="172" height="188" rx="12" fill="#eaf3ef" stroke="#b9d6c8"/><text x="394" y="26" font-size="13" fill="#2f6f58" font-weight="bold">エチオピア</text>
+<g font-size="14" text-anchor="middle">
+<rect x="20" y="38" width="150" height="46" rx="8" fill="#fff" stroke="#333"/><text x="95" y="57" font-weight="bold">エジプト王</text><text x="95" y="76" font-size="12" fill="#b5562f">バス</text>
+<rect x="20" y="132" width="150" height="46" rx="8" fill="#fff" stroke="#333"/><text x="95" y="151" font-weight="bold">アムネリス（王女）</text><text x="95" y="170" font-size="12" fill="#b5562f">メゾ・ソプラノ</text>
+<rect x="212" y="132" width="146" height="46" rx="8" fill="#fff" stroke="#333"/><text x="285" y="151" font-weight="bold">ラダメス（将軍）</text><text x="285" y="170" font-size="12" fill="#b5562f">テノール</text>
+<rect x="394" y="38" width="148" height="46" rx="8" fill="#fff" stroke="#333"/><text x="468" y="57" font-weight="bold">アモナスロ（王）</text><text x="468" y="76" font-size="12" fill="#b5562f">バリトン</text>
+<rect x="394" y="132" width="148" height="46" rx="8" fill="#fff" stroke="#333"/><text x="468" y="151" font-weight="bold">アイーダ（王女）</text><text x="468" y="170" font-size="12" fill="#b5562f">ソプラノ</text>
+<line x1="95" y1="84" x2="95" y2="132" stroke="#333"/><text x="124" y="113" font-size="12">父と娘</text>
+<line x1="468" y1="84" x2="468" y2="132" stroke="#333"/><text x="497" y="113" font-size="12">父と娘</text>
+<path d="M172 155 H206" stroke="#6a4fb0" stroke-width="2" fill="none"/><path d="M200 150 L208 155 L200 160" fill="none" stroke="#6a4fb0" stroke-width="2"/><text x="190" y="124" font-size="12" fill="#6a4fb0">片思い</text>
+<path d="M362 155 H390" stroke="#c0392b" stroke-width="2.5" fill="none"/><path d="M368 150 L360 155 L368 160 M384 150 L392 155 L384 160" fill="none" stroke="#c0392b" stroke-width="2"/><text x="376" y="124" font-size="12" fill="#c0392b">愛し合う</text>
+</g></svg></div>`;
+const SUM = {
+riron:HIDEBAR+`
+<div class="map"><b>🗺 この単元の全体像</b>
+<ol><li>音を重ねる … ① 和音と主要三和音　② 長三和音・短三和音とコードネーム</li>
+<li>調を読む … ③ 調号と調　④ 移調と転調</li>
+<li>曲の形を見る … ⑤ 形式</li>
+<li>⑥ 1・2年の復習</li></ol></div>
+
+<div class="sum"><h3>① 和音と主要三和音</h3>
+<p><span class="k">和音</span>＝高さのちがう2つ以上の音が同時にひびくこと。<br>
+<span class="k">三和音</span>＝ある音の上に、<b>1つとばし（3度ずつ）</b>で音を重ねた3つの音。下から <span class="k">根音・第3音・第5音</span>。</p>
+<p><b>作り方</b>：音階の <b>1番目（ド）・4番目（ファ）・5番目（ソ）</b> の音を根音にして重ねると、いちばん大事な3つの和音ができる。</p>
+<table class="t"><tr><th>記号</th><th>名前</th><th>ハ長調の構成音</th><th>コード</th><th>楽譜</th></tr>
+<tr><td>Ⅰ</td><td><span class="k">主和音</span></td><td><span class="k">ド・ミ・ソ</span></td><td>C</td><td>${chordFig([-2,0,2])}</td></tr>
+<tr><td>Ⅳ</td><td><span class="k">下属和音</span></td><td><span class="k">ファ・ラ・ド</span></td><td>F</td><td>${chordFig([1,3,5])}</td></tr>
+<tr><td>Ⅴ</td><td><span class="k">属和音</span></td><td><span class="k">ソ・シ・レ</span></td><td>G</td><td>${chordFig([2,4,6])}</td></tr>
+<tr><td>Ⅴ7</td><td><span class="k">属七の和音</span></td><td><span class="k">ソ・シ・レ・ファ</span></td><td>G7</td><td>${chordFig([2,4,6,8])}</td></tr></table>
+<p>Ⅰ・Ⅳ・Ⅴ の3つ＝<span class="k">主要三和音</span>。<span class="k">Ⅴ7 → Ⅰ</span> と進むと、落ち着いて終わった感じになる。</p>
+<div class="tip">💡 ローマ数字は「音階の何番目の音が根音か」。Ⅰ＝1番目のド、Ⅳ＝4番目のファ、Ⅴ＝5番目のソ。</div>
+<div class="trap">⚠ 属七の和音（Ⅴ7）だけ音が<b>4つ</b>。属和音ソ・シ・レに、根音ソから7度上の<b>ファ</b>をたす。</div></div>
+
+<div class="sum"><h3>② 長三和音・短三和音とコードネーム</h3>
+<table class="t"><tr><th>種類</th><th>ひびき</th><th>根音→第3音</th><th>根音→第5音</th><th>例</th></tr>
+<tr><td><span class="k">長三和音</span></td><td>明るい</td><td>半音<span class="k">4つ</span></td><td rowspan="2">どちらも半音<span class="k">7つ</span></td><td>C（ド・ミ・ソ）</td></tr>
+<tr><td><span class="k">短三和音</span></td><td>暗い</td><td>半音<span class="k">3つ</span></td><td>Cm、Am（ラ・ド・ミ）</td></tr></table>
+<p><b>コードネームの読み方</b></p>
+<ul><li>大文字＝<span class="k">根音の英語音名</span>（C＝ド、D＝レ、F＝ファ、G＝ソ、A＝ラ）</li>
+<li><span class="k">m</span>（マイナー）がつく＝<span class="k">短三和音</span>。何もつかなければ長三和音</li>
+<li><span class="k">7</span>がつく＝根音から<span class="k">7度上（短7度）の音をたす</span></li></ul>
+<p class="mini">押すと音が鳴ります（m のある・なしで、明るさを聴きくらべよう）</p>
+<div class="chordbtns">${['C','F','G','G7','Am','Dm'].map(k=>`<button onclick="playChord(CH['${k}'])">▶ ${k}</button>`).join('')}</div>
+<table class="t"><tr><th>C</th><th>F</th><th>G</th><th>G7</th><th>Am</th><th>Dm</th></tr>
+<tr><td>ドミソ</td><td>ファラド</td><td>ソシレ</td><td>ソシレファ</td><td>ラドミ</td><td>レファラ</td></tr></table>
+<div class="tip">💡 構成音は、根音から「1つとばし」で言えば出てくる。Am＝ラから ラ・（シ）・ド・（レ）・ミ → ラ・ド・ミ。</div></div>
+
+<div class="sum"><h3>③ 調号と調</h3>
+<p><b>調号から調を見つける3つの手順</b></p>
+<table class="t l"><tr><th>調号</th><th>長調の主音の見つけ方</th><th>例</th></tr>
+<tr><td>♯</td><td><span class="k">最後の♯のすぐ上</span>の音</td><td>♯2つ（ファ・ド）→ 最後はド♯ → すぐ上のレ → <b>ニ長調</b></td></tr>
+<tr><td>♭</td><td><span class="k">最後から2つ目の♭</span>の音<br>（♭1つは<b>ヘ長調</b>と覚える）</td><td>♭3つ（シ・ミ・ラ）→ 最後から2つ目はミ♭ → <b>変ホ長調</b></td></tr>
+<tr><td>短調</td><td>長調の主音の <span class="k">短3度下</span><br>（同じ調号どうし＝平行調）</td><td>ハ長調（ド）→ 短3度下のラ → <b>イ短調</b></td></tr></table>
+<ul><li>調の名前の <span class="k">変＝♭</span>、<span class="k">嬰＝♯</span>（変ロ長調＝シ♭が主音、嬰ヘ短調＝ファ♯が主音）</li>
+<li>♯がつく順：ファ → ド → ソ　／　♭がつく順：シ → ミ → ラ</li></ul>
+<div class="keys">${[['',0,'ハ長調','イ短調'],['#',1,'ト長調','ホ短調'],['#',2,'ニ長調','ロ短調'],['#',3,'イ長調','嬰ヘ短調'],['b',1,'ヘ長調','ニ短調'],['b',2,'変ロ長調','ト短調'],['b',3,'変ホ長調','ハ短調']].map(k=>`<div class="kk">${staffSVG({acc:k[0],n:k[1]}).replace('width="230" height="120"','width="150" height="78"')}<br><b>${k[2]}</b> ／ ${k[3]}</div>`).join('')}</div>
+<div class="trap">⚠ ♯と♭で見つけ方がちがう。♯は「最後の<b>すぐ上</b>」、♭は「最後から<b>2つ目</b>」。</div></div>
+
+<div class="sum"><h3>④ 移調と転調</h3>
+<table class="t l"><tr><th></th><th>どこが変わる？</th><th>ポイント・例</th></tr>
+<tr><td><span class="k">移調</span></td><td>曲<b>全体</b>を、別の高さ（調）に移す</td><td>音程の関係（旋律の形）は変わらない。理由：歌いやすい高さ・楽器の音域に合わせるため</td></tr>
+<tr><td><span class="k">転調</span></td><td>曲の<b>途中</b>で調が変わる</td><td>例：アイーダの行進曲（変イ長調 → ロ長調）、ブルタバの終わり近く（ホ短調 → ホ長調）</td></tr></table>
+<div class="tip">💡 「全体」か「途中」かで見分ける。全体を<b>移す</b>＝移調、途中で<b>転じる</b>＝転調。</div></div>
+
+<div class="sum"><h3>⑤ 形式</h3>
+<p>旋律のひとまとまり＝フレーズ。多くの場合 <span class="k">4小節</span>。そのまとまりの並べ方が「形式」。</p>
+<table class="t l"><tr><th>形式</th><th>並び</th><th>見分け方</th></tr>
+<tr><td><span class="k">二部形式</span></td><td>A B</td><td>2つのまとまり。「ふるさと」（a a' b a'）＝前半 a a'（A）＋後半 b a'（B）</td></tr>
+<tr><td><span class="k">三部形式</span></td><td>A B A</td><td>最初のAが1回もどってくる</td></tr>
+<tr><td><span class="k">ロンド形式</span></td><td>A B A C A</td><td>Aが何度ももどってくる</td></tr>
+<tr><td><span class="k">ソナタ形式</span></td><td><span class="k">提示部 → 展開部 → 再現部</span></td><td>主題を示す → 変化させる → もう一度示す</td></tr></table>
+<p class="mini">音楽の要素：音色（楽器や声がもつ音の感じ）・リズム・速度・旋律・テクスチュア（音の重なり方）・強弱・形式・構成</p></div>
+
+<div class="sum"><h3>⑥ 1・2年の復習（よく出る所）</h3>
+<table class="t l"><tr><th>音部記号</th><td>ト音記号＝<span class="k">第2線</span>がト（ソ）／ヘ音記号＝<span class="k">第4線</span>がヘ（ファ）</td></tr>
+<tr><th>音名</th><td>ドレミファソラシ＝ハニホヘトイロ。ドイツ語のシ＝<span class="k">H</span>（B はシ♭）</td></tr>
+<tr><th>音階</th><td>長音階 <span class="k">全全半全全全半</span>／自然短音階 <span class="k">全半全全半全全</span>。半音は<span class="k">ミ‐ファ、シ‐ド</span>。同じ調号の長調と短調＝<span class="k">平行調</span></td></tr>
+<tr><th>音程</th><td>両はしをふくめて数える（ド→ラ＝<span class="k">6度</span>、8度＝1オクターブ）</td></tr>
+<tr><th>付点</th><td>もとの半分をたす（付点4分音符＝<span class="k">1拍半</span>、付点2分音符＝<span class="k">3拍</span>）</td></tr>
+<tr><th>弧線</th><td><span class="k">タイ</span>＝同じ高さをつなぐ／<span class="k">スラー</span>＝いくつかの音をなめらかに</td></tr>
+<tr><th>奏法</th><td>スタッカート＝短く切って／テヌート＝長さを十分に保って／アクセント＝目立たせて／フェルマータ＝ほどよくのばす</td></tr>
+<tr><th>強弱</th><td>pp → p → mp → mf → f → ff（弱い→強い）。mf＝メッゾ フォルテ（少し強く）</td></tr>
+<tr><th>速度</th><td><span class="k">Adagio → Andante → Moderato → Allegro</span>（遅い→速い）。rit.＝だんだん遅く</td></tr>
+<tr><th>反復</th><td>D.C.＝はじめにもどる／D.S.＝<span class="k">セーニョ記号にもどる</span>／Fine＝終わり</td></tr>
+<tr><th>拍子</th><td>4分の3拍子＝4分音符を1拍として、1小節に3拍</td></tr></table></div>`,
+
+vltava:HIDEBAR+`
+<div class="map"><b>🗺 この単元の全体像</b>
+<ol><li>知識 … ① 作曲者と作品　② 交響詩と標題音楽</li>
+<li>聴き取り … ③ 場面の流れと音楽　④ 拍子のちがい</li>
+<li>書く … ⑤ 鑑賞文の書き方</li></ol></div>
+
+<div class="sum"><h3>① 作曲者と作品</h3>
+<table class="t l">
+<tr><th>作曲者</th><td><span class="k">スメタナ</span>（1824〜1884）。<span class="k">チェコ</span>の作曲家</td></tr>
+<tr><th>作曲</th><td><span class="k">1874年</span>。このとき、すでに<span class="k">耳が聴こえなくなっていた</span>（響きを心の中で組み立てて楽譜に書いた）</td></tr>
+<tr><th>どんな曲</th><td>連作交響詩<span class="k">「わが祖国」</span>（全<span class="k">6</span>曲）の<span class="k">第2曲</span>。第1曲は「ヴィシェフラト（高い城）」</td></tr>
+<tr><th>曲名</th><td>ブルタバ＝<span class="k">チェコ語</span>、モルダウ＝<span class="k">ドイツ語</span>。同じ川・同じ曲</td></tr>
+<tr><th>川</th><td>チェコを流れる川。プラハを通り、<span class="k">エルベ川</span>（ラベ川）へ合流する</td></tr></table>
+<div class="tip">💡 スメタナの年は全部「4」で終わる：18<b>24</b>年 生まれ → 18<b>74</b>年 ブルタバ作曲 → 18<b>84</b>年 亡くなる。</div>
+<div class="trap">⚠ アイーダと年号をまぜない：1869年 スエズ運河開通 → <b>1871年 アイーダ初演</b> → <b>1874年 ブルタバ作曲</b>。<br>
+⚠ プラハは川の終点ではない（その先でエルベ川に合流する）。</div></div>
+
+<div class="sum"><h3>② 交響詩と標題音楽</h3>
+<ul><li><span class="k">交響詩</span>＝<span class="k">オーケストラ</span>で風景や物語などを表す、ひと続きの器楽作品。歌詞も歌声もない</li>
+<li><span class="k">標題音楽</span>＝題名や物語を手がかりにして聴く音楽</li></ul>
+<div class="trap">⚠ オペラ（アイーダ）は<b>歌</b>で物語を進める舞台芸術。交響詩（ブルタバ）は<b>楽器だけ</b>で風景や物語を表す。</div></div>
+
+<div class="sum"><h3>③ 場面の流れと音楽の特ちょう</h3>
+<p class="mini">川が生まれてから、大きくなって遠ざかるまでを順にたどる曲。「場面 → 聴こえる音 → 感じ」をセットで覚えよう。</p>
+<table class="t l"><tr><th></th><th>場面</th><th>聴こえる音（楽器・拍子・調）</th><th>どんな感じ</th></tr>
+<tr><td>1</td><td><b>2つの源流</b></td><td><span class="k">フルート</span>の細かく動く音に、<span class="k">クラリネット</span>が加わる</td><td>2つの細い流れが合わさる</td></tr>
+<tr><td>2</td><td><b>川の主題</b></td><td><span class="k">弦楽器</span>中心の長い旋律。<span class="k">8分の6拍子</span>・<span class="k">ホ短調</span></td><td>ゆらゆら流れる川</td></tr>
+<tr><td>3</td><td><b>森の狩り</b></td><td><span class="k">ホルン</span>などの、合図のような音型</td><td>狩りの合図</td></tr>
+<tr><td>4</td><td><b>村の結婚式</b></td><td><span class="k">4分の2拍子</span>・<span class="k">ポルカ</span>風</td><td>はずむ踊り</td></tr>
+<tr><td>5</td><td><b>月光、水の精の踊り</b></td><td>弦楽器の<span class="k">弱く長くのびる音</span>、ハープ</td><td>静かで幻想的</td></tr>
+<tr><td></td><td colspan="3" style="text-align:center">（川の主題がもどってくる）</td></tr>
+<tr><td>6</td><td><b>聖ヨハネの急流</b></td><td><span class="k">細かい音が密集</span>し、強い響きが重なる</td><td>激しい</td></tr>
+<tr><td>7</td><td><b>広大な流れ</b></td><td>川の主題が <span class="k">ホ短調 → ホ長調</span> に変わる。厚い響き</td><td>力強く広がる・晴れやか</td></tr>
+<tr><td>8</td><td><b>ヴィシェフラト</b></td><td>「わが祖国」<span class="k">第1曲の主題</span>が出てくる</td><td>連作どうしがつながる</td></tr>
+<tr><td></td><td><b>終わり</b></td><td>遠ざかるように静かになったあと、<span class="k">強い和音2つ</span>で終わる</td><td></td></tr></table>
+<div class="trap">⚠ 静かになっても終わりではない。最後に強い和音が2つ鳴る。<br>
+⚠ 急流は「速くなった」とは限らない。<b>細かい音・厚い重なり・強い響き</b>で激しさを出している。</div></div>
+
+<div class="sum"><h3>④ 8分の6拍子と4分の2拍子</h3>
+<table class="t l"><tr><th>拍子</th><th>まとまり方</th><th>出てくる場面</th></tr>
+<tr><td><span class="k">8分の6拍子</span></td><td>8分音符<span class="k">3つずつ</span>のまとまりが<span class="k">2つ</span>（大きく2拍＝<b>複合二拍子</b>）<br><b>1</b> 2 3 <b>4</b> 5 6</td><td>川の主題 → ゆらゆら流れる</td></tr>
+<tr><td><span class="k">4分の2拍子</span></td><td>2つずつのまとまり<br><b>1</b> 2 <b>1</b> 2</td><td>村の結婚式（ポルカ）→ はずむ</td></tr></table>
+<div class="chordbtns"><button onclick="playMeter('68')">▶ 8分の6拍子（1 2 3 4 5 6）</button><button onclick="playMeter('24')">▶ 4分の2拍子</button></div>
+<div class="trap">⚠ 8分の6拍子は「2つずつ×3」ではなく「<b>3つずつ×2</b>」。</div></div>
+
+<div class="sum"><h3>⑤ 鑑賞文の書き方</h3>
+<p><b>型</b>：「<b>〇〇の場面</b>で、<b>△△（音の特徴）</b>なので、<b>□□のように感じた</b>。」</p>
+<p>△△に入れるのは、聴こえた音の特徴（楽器・強弱・リズム・重なりなど）。これが「感じたこと」の根拠になる。</p>
+<table class="t l"><tr><th><span class="ng">✕</span> 感想だけ</th><th><span class="okc">○</span> 場面＋音の特徴＋感じたこと</th></tr>
+<tr><td>急流の場面がすごかった。</td><td>聖ヨハネの急流の場面で、短い音が密集し、強い響きが重なったので、水が激しくぶつかり合うように感じた。</td></tr></table>
+<p class="mini">※ ○は型の例。「速くなった」と「細かい音が増えた」は別のこと。聴こえたとおりに書こう。</p></div>`,
+
+aida:HIDEBAR+`
+<div class="map"><b>🗺 この単元の全体像</b>
+<ol><li>知識 … ① オペラとは　② 作品と作曲者</li>
+<li>人物 … ③ 声の種類と登場人物</li>
+<li>鑑賞した場面 … ④ 第2幕第2場　⑤ その後のあらすじ</li>
+<li>書く … ⑥ 見どころ・聴きどころの書き方</li></ol></div>
+
+<div class="sum"><h3>① オペラとは</h3>
+<ul><li><span class="k">オペラ（歌劇）</span>＝<span class="k">歌</span>を中心に、音楽で物語を進める舞台芸術</li>
+<li>音楽＋演劇＋舞踊＋文学＋美術 が集まる ＝ <span class="k">総合芸術</span></li></ul>
+<table class="t l"><tr><th>歌い方</th><th>人数</th><th>ポイント</th></tr>
+<tr><td><span class="k">独唱</span></td><td>1人</td><td>聴かせどころの歌＝<span class="k">アリア</span></td></tr>
+<tr><td><span class="k">重唱</span></td><td>2〜数人</td><td>それぞれが自分のパートを歌う。ちがう気持ちを同時に歌える</td></tr>
+<tr><td><span class="k">合唱</span></td><td>大勢</td><td>民衆や兵士など</td></tr></table></div>
+
+<div class="sum"><h3>② 作品と作曲者</h3>
+<table class="t l">
+<tr><th>作曲者</th><td><span class="k">ヴェルディ</span>（1813〜1901）。<span class="k">イタリア</span>の作曲家</td></tr>
+<tr><th>きっかけ</th><td><span class="k">スエズ運河</span>の開通（1869年）を記念して<span class="k">カイロ</span>にできた歌劇場で上演するため</td></tr>
+<tr><th>初演</th><td><span class="k">1871年</span>、<span class="k">カイロ</span>（エジプト）</td></tr>
+<tr><th>舞台</th><td><span class="k">古代エジプト</span></td></tr>
+<tr><th>構成</th><td>全<span class="k">4</span>幕。鑑賞したのは<span class="k">第2幕第2場</span>（テーベの城門・凱旋の場面）</td></tr></table>
+<div class="trap">⚠ 作曲者は<b>イタリア</b>人、物語の舞台と初演は<b>エジプト</b>。<br>
+⚠ 年の順：1869年 スエズ運河開通 → <b>1871年 アイーダ初演</b> → 1874年 ブルタバ作曲。</div></div>
+
+<div class="sum"><h3>③ 声の種類と登場人物</h3>
+<table class="t"><tr><th></th><th>高い</th><th>→</th><th>低い</th></tr>
+<tr><th>女声</th><td><span class="k">ソプラノ</span></td><td><span class="k">メゾ・ソプラノ</span></td><td><span class="k">アルト</span></td></tr>
+<tr><th>男声</th><td><span class="k">テノール</span></td><td><span class="k">バリトン</span></td><td><span class="k">バス</span></td></tr></table>
+<p class="mini">男声は、同じパートの女声よりおよそ1オクターブ低い。</p>
+${REL}
+<table class="t l"><tr><th>人物</th><th>立場</th><th>声</th></tr>
+<tr><td><b>アイーダ</b></td><td>エチオピアの王女（捕らわれの身）</td><td><span class="k">ソプラノ</span></td></tr>
+<tr><td><b>ラダメス</b></td><td>エジプトの将軍。アイーダと愛し合う</td><td><span class="k">テノール</span></td></tr>
+<tr><td><b>アムネリス</b></td><td>エジプトの王女。ラダメスに片思い</td><td><span class="k">メゾ・ソプラノ</span></td></tr>
+<tr><td><b>アモナスロ</b></td><td>エチオピア王。アイーダの父</td><td><span class="k">バリトン</span></td></tr>
+<tr><td><b>エジプト王</b></td><td>アムネリスの父</td><td><span class="k">バス</span></td></tr></table>
+<div class="tip">💡 <b>役がらと声の高さはつながっている</b><br>
+・恋をする2人＝それぞれいちばん高い声（ソプラノ・テノール）→ 高く輝く声＝若さ・情熱<br>
+・恋がたきのアムネリス＝2番目のメゾ・ソプラノ<br>
+・父親2人＝低い声（バリトン・バス）→ 低く重い声＝威厳・年長。エジプト王がいちばん低いバス</div></div>
+
+<div class="sum"><h3>④ 第2幕第2場の4つの場面</h3>
+<table class="t l"><tr><th></th><th>場面</th><th>音楽・舞台の特ちょう</th></tr>
+<tr><td>1</td><td><b>凱旋を祝う大合唱</b></td><td>「エジプトに栄光あれ」。強弱は<span class="k">ff</span>、速度は<span class="k">Allegro maestoso</span>（<span class="k">速く、荘厳に</span>）。神官たちの合唱も加わる</td></tr>
+<tr><td>2</td><td><b>凱旋の行進曲</b></td><td>舞台の上で細長い<span class="k">アイーダ・トランペット</span>が吹く。別の隊が同じ旋律を高い調でくり返す：<span class="k">変イ長調 → ロ長調</span>（<span class="k">転調</span>）</td></tr>
+<tr><td>3</td><td><b>バレエ</b></td><td><span class="k">歌はなく</span>、オーケストラの音楽に合わせて踊る。（バレエの例：チャイコフスキー「白鳥の湖」）</td></tr>
+<tr><td>4</td><td><b>父との再会・王の宣言</b></td><td>王が「ラダメスをアムネリスと結婚させ、後継者にする」と宣言 → <span class="k">重唱と合唱</span>が重なり、ちがう気持ちが同時に歌われる</td></tr></table>
+<p><b>場面4のそれぞれの気持ち</b></p>
+<table class="t"><tr><th>アイーダ</th><th>ラダメス</th><th>アムネリス</th><th>王・民衆</th></tr>
+<tr><td><span class="k">絶望</span></td><td>心の中で<span class="k">苦しむ</span></td><td><span class="k">大喜び</span></td><td>勝利を祝う</td></tr></table>
+<div class="tip">💡 ちがう気持ちを<b>同時に</b>歌えるのは、セリフ劇にはできないオペラならではの表現。</div></div>
+
+<div class="sum"><h3>⑤ その後のあらすじ</h3>
+<div class="flow">
+<div><b>第3幕</b>　ラダメスがアイーダにエジプト軍の進む道を答え、それをアモナスロに聞かれてしまう</div>
+<div>ラダメスは捕らえられ、<span class="k">地下ろう</span>へ</div>
+<div>そこにアイーダが待っていた。2人は永遠の愛を誓いながら息絶える</div>
+</div></div>
+
+<div class="sum"><h3>⑥ 見どころ・聴きどころの書き方</h3>
+<p><b>型</b>：「わたしは<b>場面〇</b>がいちばんの見どころ・聴きどころ。なぜなら、<b>音楽の特徴</b>が<b>舞台のようす・人物の気持ち</b>と合わさって、<b>どんな感じ</b>がするからです。」</p>
+<table class="t l"><tr><th><span class="ng">✕</span> 理由がない</th><th><span class="okc">○</span> 場面＋音楽の特徴＋舞台のようす＋感じ</th></tr>
+<tr><td>場面2がすごかった。トランペットが長かった。</td><td>場面2で、長いトランペットの明るく強い音が兵士の行進と合わさって、勝利の誇らしさが伝わってくる。</td></tr></table>
+<p class="mini">※ ○は型の例。自分が選んだ場面で、聴こえた音と見えた舞台のようすを書こう。</p></div>`
+};
+
+/* ===================== 保存 ===================== */
+const KEY='ongaku3-test-v1';
+let ST={};
+try{ST=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){ST={};}
+ST.q=ST.q||{}; ST.n=ST.n||10;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(e){}}
+function record(id,ok){const r=ST.q[id]||{ok:0,ng:0,last:null};ok?r.ok++:r.ng++;r.last=ok;ST.q[id]=r;save();}
+const isWeak=id=>ST.q[id]&&ST.q[id].last===false;
+
+/* ===================== 道具 ===================== */
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pickOne(a){return a[Math.floor(Math.random()*a.length)];}
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function unitColor(u){return u==='mix'||u==='weak'?'var(--mix)':UNITS[u].c;}
+function build(q){ // 生成問題を実体化
+  const base=Object.assign({},q);
+  if(q.gen){Object.assign(base,q.gen.call(base));}
+  return base;
+}
+
+/* ===================== 画面 ===================== */
+let S=null; // クイズ状態
+function go(view,arg){
+  window.scrollTo(0,0);
+  $('#homeBtn').classList.toggle('hidden',view==='home');
+  if(view==='home') return home();
+  if(view==='sum') return summary(arg);
+  if(view==='cards') return cards(arg);
+  if(view==='quiz') return startQuiz(arg);
+}
+
+function home(){
+  const weak=Q.filter(q=>isWeak(q.id)).length;
+  let h=`<h2>どこを勉強する？</h2><p class="lead">「まとめ」で確認 →「カード」で覚える →「クイズ」で力だめし。まちがえた問題は自動で記録されます。</p>
+  <div class="opts">クイズの問題数：<select id="nsel" onchange="ST.n=+this.value;save()">${[10,20,0].map(n=>`<option value="${n}" ${ST.n===n?'selected':''}>${n||'全部'}</option>`).join('')}</select></div>`;
+  for(const u in UNITS){
+    const U=UNITS[u],qs=Q.filter(q=>q.u===u),done=qs.filter(q=>ST.q[q.id]),good=qs.filter(q=>ST.q[q.id]&&ST.q[q.id].last);
+    h+=`<div class="unit" style="--c:${U.c}"><div class="t">${U.icon} ${U.name}</div><div class="s">${U.sub}</div>
+    <div class="bar"><i style="width:${qs.length?good.length/qs.length*100:0}%"></i></div>
+    <div class="stat">全${qs.length}問中　正解ずみ ${good.length}問　（とりくんだ ${done.length}問）</div>
+    <div class="btns" style="margin-top:8px"><button class="btn" onclick="go('sum','${u}')">📘 まとめ</button><button class="btn" onclick="go('cards','${u}')">🃏 カード</button><button class="btn fill" onclick="go('quiz','${u}')">✏️ クイズ</button></div></div>`;
+  }
+  h+=`<div class="unit" style="--c:var(--mix)"><div class="t">🎯 テスト本番モード</div><div class="s">3つの範囲をまぜて出題</div>
+  <div class="btns" style="margin-top:8px"><button class="btn fill" onclick="go('quiz','mix')">全範囲ミックス</button>
+  <button class="btn" onclick="go('quiz','weak')" ${weak?'':'disabled'}>まちがえた問題だけ（${weak}問）</button>
+  <button class="btn" onclick="if(confirm('記録をすべて消しますか？')){ST.q={};save();home();}">記録を消す</button></div></div>`;
+  $('#app').innerHTML=h;
+}
+
+function summary(u){
+  const U=UNITS[u];
+  $('#app').innerHTML=`<div style="--c:${U.c}"><h2>${U.icon} ${U.name}　まとめ</h2><p class="lead">黄色いマーカー＝テストに出やすい語句</p>${SUM[u]}
+  <div class="btns"><button class="btn" onclick="go('cards','${u}')">🃏 カードで覚える</button><button class="btn fill" onclick="go('quiz','${u}')">✏️ クイズに挑戦</button></div></div>`;
+}
+
+/* ---------- カード ---------- */
+let C=null;
+function cards(u){
+  const list=Q.filter(q=>q.u===u&&q.type!=='order'&&!q.listen);
+  C={u,list:shuffle(list),i:0,flip:false};
+  drawCard();
+}
+function drawCard(){
+  const U=UNITS[C.u];
+  if(C.i>=C.list.length){
+    $('#app').innerHTML=`<div style="--c:${U.c}"><h2>🃏 カード おわり！</h2><p class="lead">「まだ」にした問題は「まちがえた問題だけ」で復習できます。</p>
+    <div class="btns"><button class="btn" onclick="cards('${C.u}')">もう一周</button><button class="btn fill" onclick="go('quiz','${C.u}')">クイズに挑戦</button></div></div>`;return;
+  }
+  const q=build(C.list[C.i]);
+  $('#app').innerHTML=`<div style="--c:${U.c}">
+  <div class="qhead"><span>${U.icon} ${U.name}　カード</span><span>${C.i+1} / ${C.list.length}</span></div>
+  <div class="prog"><i style="width:${C.i/C.list.length*100}%"></i></div>
+  <div class="flash" onclick="C.flip=!C.flip;drawCardFace()">
+    <div class="tag">${esc(q.tag)}</div>
+    ${q.fig?`<div class="fig">${staffSVG(q.fig)}</div>`:''}
+    <div class="front">${esc(q.q)}</div>
+    <div id="cb"></div>
+    <div class="hint" id="ch">タップで答えを見る（スペースキーでもOK）</div>
+  </div>
+  ${q.audio?`<div style="text-align:center;margin-top:10px"><button class="play" onclick="playQ()">▶ 音を聴く</button></div>`:''}
+  <div class="cardnav"><button class="btn" style="--c:var(--ng)" onclick="cardNext(false)">✕ まだ</button><button class="btn fill" style="--c:var(--ok)" onclick="cardNext(true)">○ 覚えた</button></div></div>`;
+  C.q=q; C.flip=false;
+}
+function drawCardFace(){
+  $('#cb').innerHTML=C.flip?`<div class="back">${esc(C.q.a)}</div><div class="ex">${esc(C.q.e||'')}</div>`:'';
+  $('#ch').textContent=C.flip?'○か✕を選んで次へ':'タップで答えを見る（スペースキーでもOK）';
+}
+function cardNext(ok){record(C.list[C.i].id,ok);C.i++;drawCard();}
+
+/* ---------- クイズ ---------- */
+function startQuiz(u,list){
+  let pool=list|| (u==='mix'?Q.slice(): u==='weak'?Q.filter(q=>isWeak(q.id)):Q.filter(q=>q.u===u));
+  pool=shuffle(pool);
+  if(!list && u!=='weak' && ST.n) pool=pool.slice(0,ST.n);
+  S={u,list:pool,i:0,ok:0,miss:[]};
+  drawQ();
+}
+function drawQ(){
+  if(S.i>=S.list.length) return result();
+  const raw=S.list[S.i],q=build(raw),uc=unitColor(raw.u);
+  S.cur=q; S.answered=false;
+  const title=S.u==='mix'?'全範囲ミックス':S.u==='weak'?'まちがえた問題':UNITS[S.u].name;
+  let body='';
+  if(q.type==='order'){
+    S.picked=[]; S.pool=shuffle(q.items);
+    body=`<div class="picked" id="picked"></div><div class="pool" id="pool"></div>
+    <div class="btns" style="margin-top:10px"><button class="btn" onclick="S.picked=[];drawOrder()">やり直す</button><button class="btn fill" id="chk" onclick="checkOrder()" disabled>答え合わせ</button></div>`;
+  }else{
+    S.opts=shuffle([q.a,...q.d]);
+    body=`<div class="choices">${S.opts.map((o,i)=>`<button class="choice" data-i="${i}" onclick="answer(${i})"><span class="n">${i+1}</span><span>${esc(o)}</span></button>`).join('')}</div>`;
+  }
+  $('#app').innerHTML=`<div style="--c:${uc}">
+  <div class="qhead"><span>${esc(title)}</span><span>${S.i+1} / ${S.list.length}　正解 ${S.ok}</span></div>
+  <div class="prog"><i style="width:${S.i/S.list.length*100}%"></i></div>
+  <div class="qcard" style="--c:${UNITS[raw.u].c}">
+    <div class="tag">${UNITS[raw.u].icon} ${esc(q.tag)}</div>
+    <p class="qtext">${esc(q.q)}</p>
+    ${q.fig?`<div class="fig">${staffSVG(q.fig)}</div>`:''}
+    ${q.audio?`<button class="play" onclick="playQ()">▶ 音を聴く</button>`:''}
+    ${body}
+    <div id="fb"></div>
+  </div></div>`;
+  if(q.type==='order') drawOrder();
+  if(q.listen) setTimeout(()=>{try{playQ();}catch(e){}},300);
+}
+function playQ(){
+  const q=S&&S.cur&&$('.qcard')?S.cur:C&&C.q;
+  if(!q||!q.audio) return;
+  if(q.audio.chord) playChord(CH[q.audio.chord]);
+  if(q.audio.meter) playMeter(q.audio.meter);
+}
+function answer(i){
+  if(S.answered) return; S.answered=true;
+  const q=S.cur,ok=S.opts[i]===q.a;
+  document.querySelectorAll('.choice').forEach((b,j)=>{b.disabled=true;if(S.opts[j]===q.a)b.classList.add('ok');else if(j===i)b.classList.add('ng');});
+  finish(ok,q.a);
+}
+function drawOrder(){
+  const rest=S.pool.filter(x=>!S.picked.includes(x));
+  $('#picked').innerHTML=S.picked.map((x,i)=>`<button class="chip in" onclick="S.picked.splice(${i},1);drawOrder()">${i+1}. ${esc(x)}</button>`).join('');
+  $('#pool').innerHTML=rest.map(x=>`<button class="chip" onclick='S.picked.push(${JSON.stringify(x)});drawOrder()'>${esc(x)}</button>`).join('');
+  $('#chk').disabled=S.picked.length!==S.pool.length;
+}
+function checkOrder(){
+  if(S.answered) return; S.answered=true;
+  const q=S.cur,ok=S.picked.every((x,i)=>x===q.items[i]);
+  $('#picked').innerHTML=S.picked.map((x,i)=>`<button class="chip ${x===q.items[i]?'ok':'ng'}" disabled>${i+1}. ${esc(x)}</button>`).join('');
+  document.querySelectorAll('.btns .btn').forEach(b=>b.disabled=true);
+  finish(ok,q.items.join(' → '));
+}
+function finish(ok,ans){
+  const q=S.cur;
+  record(q.id,ok);
+  if(ok) S.ok++; else S.miss.push({q:q.q,a:ans,e:q.e,raw:S.list[S.i]});
+  $('#fb').innerHTML=`<div class="fb ${ok?'ok':'ng'}"><b>${ok?'⭕ 正解！':'❌ ざんねん'}</b>${ok?'':`<br>正解：<b>${esc(ans)}</b>`}${q.e?`<br>${esc(q.e)}`:''}</div>
+  <button class="btn fill next" id="nextBtn" onclick="S.i++;drawQ()">${S.i+1<S.list.length?'次の問題へ ▶':'結果を見る ▶'}</button>`;
+  $('#nextBtn').focus({preventScroll:true});
+  $('#fb').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function result(){
+  const n=S.list.length,p=Math.round(S.ok/n*100),uc=unitColor(S.u);
+  const msg=p===100?'パーフェクト！ テストもこの調子 🎉':p>=80?'よくできました！ あと少しで満点 👍':p>=50?'いい感じ。まちがえた所を「まとめ」で確認しよう':'まずは「まとめ」と「カード」で覚えてから再挑戦しよう';
+  $('#app').innerHTML=`<div style="--c:${uc}"><h2>結果</h2>
+  <p class="score">${S.ok} / ${n}</p><p class="msg">${p}点　${msg}</p>
+  <div class="btns" style="margin-bottom:14px">${S.miss.length?`<button class="btn fill" onclick="startQuiz('${S.u}',S.miss.map(m=>m.raw))">まちがえた${S.miss.length}問をもう一度</button>`:''}
+  <button class="btn" onclick="go('quiz','${S.u}')">別の問題で</button><button class="btn" onclick="go('home')">ホーム</button></div>
+  ${S.miss.map(m=>`<div class="miss">${esc(m.q)}<br><span class="a">→ ${esc(m.a)}</span>${m.e?`<br><span class="mini">${esc(m.e)}</span>`:''}</div>`).join('')}</div>`;
+}
+
+/* キーボード：1〜4で選ぶ、Enterで次へ、スペースでカードをめくる */
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='SELECT') return;
+  if($('.choices')&&!S.answered&&/^[1-4]$/.test(e.key)){const b=document.querySelector(`.choice[data-i="${+e.key-1}"]`);if(b){b.click();e.preventDefault();}}
+  else if(e.key==='Enter'&&$('#nextBtn')){e.preventDefault();$('#nextBtn').click();}
+  else if(e.key===' '&&$('.flash')){e.preventDefault();C.flip=!C.flip;drawCardFace();}
+});
+
+go('home');
+</script>
+</body>
+</html>

@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>音楽テスト勉強 2年</title>
+<style>
+:root{
+  --bg:#f6f4ef; --card:#fff; --ink:#1f2633; --sub:#5b6474; --line:#d9dde4;
+  --gaku:#1e6fa8; --gaku-l:#e6f0f8; --gaku1:#5a6f8c; --gaku1-l:#eceff4;
+  --eten:#b23a48; --eten-l:#fbecee; --bol:#c46a12; --bol-l:#fdf1e2;
+  --ok:#2e7d4f; --ok-l:#e5f4ea; --ng:#c62828; --ng-l:#fdeaea; --key:#d62828; --mark:#fff3b0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15181e; --card:#20242c; --ink:#e8eaee; --sub:#a3abb8; --line:#363c47;
+    --gaku-l:#1b2c3b; --gaku1-l:#262c36; --eten-l:#3a2026; --bol-l:#3a2a18;
+    --ok-l:#1b3326; --ng-l:#3d1d1d; --key:#ff7b7b; --mark:#4a4220;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15181e; --card:#20242c; --ink:#e8eaee; --sub:#a3abb8; --line:#363c47;
+  --gaku-l:#1b2c3b; --gaku1-l:#262c36; --eten-l:#3a2026; --bol-l:#3a2a18;
+  --ok-l:#1b3326; --ng-l:#3d1d1d; --key:#ff7b7b; --mark:#4a4220;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"BIZ UDPGothic","Hiragino Sans","Meiryo",system-ui,sans-serif;line-height:1.7;-webkit-text-size-adjust:100%}
+header{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.hin{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+h1{font-size:1.15rem;margin:0;flex:1 1 220px}
+h1 small{display:block;font-size:.75rem;color:var(--sub);font-weight:normal}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+nav button{border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:7px 14px;border-radius:999px;font:inherit;font-size:.9rem;cursor:pointer}
+nav button.on{background:var(--ink);color:var(--card);border-color:var(--ink)}
+main{max-width:860px;margin:0 auto;padding:16px 16px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+h2{font-size:1.05rem;margin:0 0 10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-width:0;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:10px 14px;font:inherit;cursor:pointer;text-align:left;flex:1 1 170px}
+.chip b{display:block}
+.chip span{font-size:.8rem;color:var(--sub)}
+.chip.on[data-c=gaku]{border-color:var(--gaku);background:var(--gaku-l)}
+.chip.on[data-c=gaku1]{border-color:var(--gaku1);background:var(--gaku1-l)}
+.chip.on[data-c=eten]{border-color:var(--eten);background:var(--eten-l)}
+.chip.on[data-c=bol]{border-color:var(--bol);background:var(--bol-l)}
+.chip.on:not([data-c]){border-color:var(--ink);background:var(--bg)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{border:none;border-radius:12px;padding:12px 22px;font:inherit;font-weight:bold;cursor:pointer;background:var(--ink);color:var(--card)}
+.btn.sub{background:var(--bg);color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.4;cursor:default}
+.big{font-size:1.1rem;padding:14px 30px}
+.muted{color:var(--sub);font-size:.88rem}
+.tag{display:inline-block;font-size:.75rem;font-weight:bold;padding:2px 10px;border-radius:999px;color:#fff}
+.tag.gaku{background:var(--gaku)}.tag.gaku1{background:var(--gaku1)}.tag.eten{background:var(--eten)}.tag.bol{background:var(--bol)}
+.prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:6px 0 14px}
+.prog i{display:block;height:100%;background:var(--ok);transition:width .3s}
+.q{font-size:1.15rem;font-weight:bold;margin:10px 0 12px}
+.fig{margin:8px 0 14px;text-align:center;min-width:0}
+.fig>svg{display:block;margin:0 auto 8px;max-width:100%;height:auto;color:var(--ink)}
+.fig .bars{justify-content:center;margin-top:28px}
+.play{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;font-size:.85rem;cursor:pointer}
+.choices{display:grid;gap:10px}
+.choice{border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:12px 14px;font:inherit;font-size:1rem;text-align:left;cursor:pointer;display:flex;gap:10px;align-items:center}
+.choice:hover:not(:disabled){border-color:var(--sub)}
+.choice .n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:.8rem;font-weight:bold}
+.choice.ok{border-color:var(--ok);background:var(--ok-l)}
+.choice.ng{border-color:var(--ng);background:var(--ng-l)}
+.choice:disabled{cursor:default}
+.fb{margin-top:14px;padding:12px 14px;border-radius:12px;display:none}
+.fb.ok{display:block;background:var(--ok-l)}
+.fb.ng{display:block;background:var(--ng-l)}
+.fb b{font-size:1.05rem}
+.ans{font-size:1.25rem;font-weight:bold;color:var(--key);margin:4px 0}
+.score{font-size:2.6rem;font-weight:bold;text-align:center;margin:6px 0}
+.miss{border-top:1px solid var(--line);padding:10px 0}
+.miss:first-child{border-top:none}
+/* まとめ */
+.sum h3{font-size:1rem;margin:16px 0 6px;padding-left:10px;border-left:5px solid var(--gaku)}
+.sum[data-c=eten] h3{border-color:var(--eten)}
+.sum[data-c=bol] h3{border-color:var(--bol)}
+.sum[data-c=gaku1] h3{border-color:var(--gaku1)}
+.sum ul{margin:0;padding-left:1.3em}
+.sum li{margin:3px 0}
+.k{color:var(--key);font-weight:bold;border-radius:4px;transition:background .15s}
+.hide .k{color:transparent;background:var(--mark);cursor:pointer;user-select:none;border-bottom:2px solid var(--key)}
+.hide .k.open{color:var(--key);background:transparent}
+table.t{border-collapse:collapse;width:100%;font-size:.92rem;margin:6px 0}
+table.t th,table.t td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
+table.t th{background:var(--bg);white-space:nowrap}
+.sumbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:10px}
+.bars{display:flex;margin:6px 0}
+.bars .m{border:2px solid var(--ink);border-left:none;min-width:72px;height:54px;position:relative;display:grid;place-items:center;font-size:1.3rem;font-weight:bold}
+.bars .m:first-child{border-left:2px solid var(--ink)}
+.bars .m.end{border-right:6px double var(--ink)}
+.bars .mk{position:absolute;top:-24px;font-size:.85rem;font-style:italic;font-family:Georgia,serif;white-space:nowrap}
+.bars .mk.r{right:2px}.bars .mk.l{left:2px}
+.flash .ansbox{display:none}
+.flash.show .ansbox{display:block}
+/* まとめ：全体像・ヒント・音階の図 */
+.map{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:4px 0 6px;font-size:.95rem}
+.map ol{margin:4px 0 0;padding-left:1.4em}
+.tip{background:var(--bol-l);border-left:5px solid var(--bol);border-radius:8px;padding:8px 12px;margin:8px 0;font-size:.92rem}
+.sum p{margin:6px 0}
+.sum .cap{font-size:.88rem;color:var(--sub);text-align:center;margin:2px 0 8px}
+.sum table .fig{margin:4px 0}
+.sum table .fig>svg{margin:-6px auto -22px;width:130px;max-width:100%;height:auto}
+.sum table td:has(.fig){text-align:center}
+.steps{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:2px;margin:4px 0 10px}
+.steps b{border:2px solid var(--ink);border-radius:8px;padding:2px 7px;min-width:2.2em;text-align:center;background:var(--card)}
+.steps i{font-style:normal;font-size:.8rem;padding:0 3px;color:var(--sub)}
+.steps i.h{color:var(--key);font-weight:bold}
+footer{max-width:860px;margin:0 auto;padding:0 16px 30px;font-size:.78rem;color:var(--sub)}
+@media (max-width:520px){ .q{font-size:1.05rem} .bars .m{min-width:56px} }
+</style>
+</head>
+<body>
+<header><div class="hin">
+  <h1>音楽 テスト勉強アプリ <small>2年｜楽典（音階と調・音程とリズムの記号）・越天楽・ボレロ</small></h1>
+  <nav>
+    <button data-v="sum">まとめ</button>
+    <button data-v="quiz">問題</button>
+    <button data-v="rec">きろく</button>
+  </nav>
+</div></header>
+<main id="app"></main>
+<footer>教育出版「中学音楽」の授業内容（楽典2年・雅楽「越天楽」・ラヴェル「ボレロ」）にそろえた自習用です。記録はこの端末のブラウザの中だけに残り、どこにも送られません。</footer>
+
+<script>
+/* ===================== 図：五線・鍵盤・反復 ===================== */
+const STEP={c:0,d:1,e:2,f:3,g:4,a:5,b:6};
+const SEMI={c:0,d:2,e:4,f:5,g:7,a:9,b:11};
+function parseP(p){const m=p.match(/^([a-g])(#|b)?(\d)$/);return{l:m[1],acc:m[2]||'',o:+m[3],st:STEP[m[1]]+7*(+m[3]-4),midi:12*(+m[3]+1)+SEMI[m[1]]+(m[2]==='#'?1:m[2]==='b'?-1:0)}}
+// ト音記号（簡略形）
+function gclef(x,gy){return `<path d="M${x+7} ${gy+24} C${x+12} ${gy+26} ${x+14} ${gy+18} ${x+13} ${gy+8} L${x+10} ${gy-30} C${x+9} ${gy-42} ${x+19} ${gy-44} ${x+19} ${gy-33} C${x+19} ${gy-22} ${x+1} ${gy-14} ${x+1} ${gy-1} C${x+1} ${gy+11} ${x+21} ${gy+12} ${x+21} ${gy+1} C${x+21} ${gy-9} ${x+8} ${gy-9} ${x+9} ${gy+2}" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${x+6}" cy="${gy+21}" r="3.6" fill="currentColor"/>`}
+function sharp(x,y){return `<g stroke="currentColor" stroke-width="1.3"><line x1="${x-2}" y1="${y-9}" x2="${x-2}" y2="${y+9}"/><line x1="${x+2}" y1="${y-10}" x2="${x+2}" y2="${y+8}"/></g><g stroke="currentColor" stroke-width="3"><line x1="${x-5}" y1="${y-2}" x2="${x+5}" y2="${y-4}"/><line x1="${x-5}" y1="${y+4}" x2="${x+5}" y2="${y+2}"/></g>`}
+function flat(x,y){return `<path d="M${x-3} ${y-14} L${x-3} ${y+5} C${x+4} ${y} ${x+6} ${y-5} ${x+1} ${y-5} C${x-1} ${y-5} ${x-2} ${y-4} ${x-3} ${y-2}" fill="none" stroke="currentColor" stroke-width="1.8"/>`}
+/* staff: {notes:[{p,d,dot,art}], key:'#1'|'b1', tie:[i,j], slur:[i,j], trip:[i,j], fermata, clef:true} */
+function staffSVG(f){
+  const top=30, sp=10, gap=f.gap||56, notes=f.notes||[];
+  const clef=f.clef!==false, ksx=clef?44:14;
+  const ks=f.key==='#1'?1:f.key==='b1'?1:0;
+  const nx0=ksx+(ks?22:6)+20;
+  const W=Math.max(nx0+notes.length*gap+10, f.key&&!notes.length?120:0, 120);
+  const yOf=st=>top+40-(st-2)*5;
+  let s=`<svg viewBox="0 0 ${W} 130" width="${Math.min(W*1.6,560)}" role="img" aria-label="五線の図">`;
+  for(let i=0;i<5;i++)s+=`<line x1="4" x2="${W-4}" y1="${top+i*sp}" y2="${top+i*sp}" stroke="currentColor" stroke-width="1"/>`;
+  if(clef)s+=gclef(12,top+30);
+  if(f.key==='#1')s+=sharp(ksx+8,yOf(10));
+  if(f.key==='b1')s+=flat(ksx+8,yOf(6));
+  const pos=[];
+  notes.forEach((n,i)=>{
+    const P=parseP(n.p), x=nx0+i*gap, y=yOf(P.st), d=n.d||'w';
+    pos.push({x,y});
+    // 加線
+    for(let st=0;st>=P.st;st-=2)s+=`<line x1="${x-11}" x2="${x+11}" y1="${yOf(st)}" y2="${yOf(st)}" stroke="currentColor" stroke-width="1.2"/>`;
+    for(let st=12;st<=P.st;st+=2)s+=`<line x1="${x-11}" x2="${x+11}" y1="${yOf(st)}" y2="${yOf(st)}" stroke="currentColor" stroke-width="1.2"/>`;
+    if(P.acc==='#')s+=sharp(x-17,y);
+    if(P.acc==='b')s+=flat(x-16,y);
+    const filled=(d==='q'||d==='e');
+    s+=`<ellipse cx="${x}" cy="${y}" rx="${d==='w'?7.5:6.2}" ry="${d==='w'?5:4.4}" transform="rotate(${d==='w'?-10:-22} ${x} ${y})" fill="${filled?'currentColor':'none'}" stroke="currentColor" stroke-width="${d==='w'?2.4:1.8}"/>`;
+    if(d!=='w'){
+      s+=`<line x1="${x+5.6}" x2="${x+5.6}" y1="${y-1}" y2="${y-32}" stroke="currentColor" stroke-width="1.4"/>`;
+      if(d==='e'&&!n.beam)s+=`<path d="M${x+5.6} ${y-32} C${x+8} ${y-24} ${x+16} ${y-22} ${x+13} ${y-12}" fill="none" stroke="currentColor" stroke-width="2"/>`;
+    }
+    if(n.dot)s+=`<circle cx="${x+13}" cy="${P.st%2===0?y-5:y}" r="2" fill="currentColor"/>`;
+    if(n.art==='stac')s+=`<circle cx="${x}" cy="${y+11}" r="2.2" fill="currentColor"/>`;
+    if(n.art==='ten')s+=`<line x1="${x-6}" x2="${x+6}" y1="${y+11}" y2="${y+11}" stroke="currentColor" stroke-width="2"/>`;
+    if(n.art==='acc')s+=`<path d="M${x-7} ${y+8} L${x+7} ${y+12} L${x-7} ${y+16}" fill="none" stroke="currentColor" stroke-width="1.6"/>`;
+    if(n.art==='ferm')s+=`<path d="M${x-10} ${top-6} A10 9 0 0 1 ${x+10} ${top-6}" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="${x}" cy="${top-8}" r="2" fill="currentColor"/>`;
+  });
+  // 連桁（8分の3連符など）
+  if(f.beam){const[a,b]=f.beam;s+=`<line x1="${pos[a].x+5.6}" x2="${pos[b].x+5.6}" y1="${Math.min(pos[a].y,pos[b].y)-32}" y2="${Math.min(pos[a].y,pos[b].y)-32}" stroke="currentColor" stroke-width="4.5"/>`;
+    for(let i=a;i<=b;i++){const yy=Math.min(pos[a].y,pos[b].y)-32;s+=`<line x1="${pos[i].x+5.6}" x2="${pos[i].x+5.6}" y1="${pos[i].y-1}" y2="${yy}" stroke="currentColor" stroke-width="1.4"/>`;}}
+  if(f.trip){const[a,b]=f.trip,yy=Math.min(...pos.slice(a,b+1).map(p=>p.y))-44;s+=`<text x="${(pos[a].x+pos[b].x)/2+5}" y="${yy}" font-size="13" font-style="italic" font-weight="bold" text-anchor="middle" fill="currentColor">3</text>`}
+  const arc=(a,b,under)=>{const p=pos[a],q=pos[b],dy=under?9:-9,cy=under?Math.max(p.y,q.y)+20:Math.min(p.y,q.y)-20;
+    return `<path d="M${p.x+2} ${p.y+dy} Q${(p.x+q.x)/2} ${cy} ${q.x-2} ${q.y+dy}" fill="none" stroke="currentColor" stroke-width="1.8"/>`};
+  if(f.tie)s+=arc(f.tie[0],f.tie[1],true);
+  if(f.slur)s+=arc(f.slur[0],f.slur[1],true);
+  return s+'</svg>';
+}
+const WK=['C','D','E','F','G','A','B','C2','D2','E2'];
+const BK={'C#':1,'D#':2,'F#':4,'G#':5,'A#':6,'C#2':8,'D#2':9};
+function kbSVG(f){
+  const w=36,h=130,n=WK.length;let s=`<svg viewBox="0 0 ${n*w+2} ${h+26}" width="${Math.min((n*w+2)*1.3,520)}" role="img" aria-label="鍵盤の図">`;
+  const lab={C:'ド',D:'レ',E:'ミ',F:'ファ',G:'ソ',A:'ラ',B:'シ',C2:'ド',D2:'レ',E2:'ミ'};
+  WK.forEach((k,i)=>{const on=f.k.includes(k);s+=`<rect x="${1+i*w}" y="1" width="${w}" height="${h}" fill="${on?'#ffd54a':'#fff'}" stroke="#333" stroke-width="1.2" rx="3"/><text x="${1+i*w+w/2}" y="${h+18}" font-size="12" text-anchor="middle" fill="currentColor">${lab[k]}</text>`});
+  Object.entries(BK).forEach(([k,i])=>{const on=f.k.includes(k);s+=`<rect x="${1+i*w-11}" y="1" width="22" height="80" fill="${on?'#ffb300':'#222'}" stroke="#111" rx="2"/>`});
+  return s+'</svg>';
+}
+const segno=`<svg viewBox="0 0 20 24" width="18" height="22" style="vertical-align:middle"><path d="M15 5 C12 1 4 2 5 7 C6 11 15 11 15 16 C15 21 7 22 5 18" fill="none" stroke="currentColor" stroke-width="2"/><line x1="3" y1="21" x2="17" y2="3" stroke="currentColor" stroke-width="1.6"/><circle cx="4" cy="12" r="1.6" fill="currentColor"/><circle cx="16" cy="12" r="1.6" fill="currentColor"/></svg>`;
+function barsHTML(f){
+  return `<div class="bars">${f.m.map((m,i)=>`<div class="m${i===f.m.length-1?' end':''}">${m.l}${m.segno?`<span class="mk l">${segno}</span>`:''}${m.fine?'<span class="mk r">Fine</span>':''}${m.ds?'<span class="mk r">D.S.</span>':''}${m.dc?'<span class="mk r">D.C.</span>':''}</div>`).join('')}</div>`;
+}
+function figHTML(f){
+  if(!f)return'';
+  let h=f.t==='staff'?staffSVG(f):f.t==='kb'?kbSVG(f):f.t==='bars'?barsHTML(f):'';
+  if(f.t==='staff'&&f.notes&&f.notes.length&&f.sound!==false)h+=`<button class="play" data-play='${JSON.stringify(f.notes.map(n=>n.p))}'>▶ 音を聴く</button>`;
+  if(f.t==='kb')h+=`<button class="play" data-play='${JSON.stringify(f.k.map(kbToP))}'>▶ 音を聴く</button>`;
+  return `<div class="fig">${h}</div>`;
+}
+function kbToP(k){const two=k.endsWith('2');const b=k.replace('2','');return b[0].toLowerCase()+(b[1]||'')+(two?5:4)}
+
+/* ===================== 音 ===================== */
+let AC=null;
+function playNotes(list,dur=0.55){
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();}catch(e){return}
+  if(AC.state==='suspended')AC.resume();
+  let t=AC.currentTime+0.05;
+  list.forEach(p=>{const f=440*Math.pow(2,(parseP(p).midi-69)/12);
+    const o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=f;
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.3,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+dur*1.1);
+    o.connect(g).connect(AC.destination);o.start(t);o.stop(t+dur*1.2);t+=dur;});
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-play]');if(b)playNotes(JSON.parse(b.dataset.play))});
+
+/* ===================== 問題データ ===================== */
+// c:分野 / t:小見出し / q:問題 / a:正答 / d:ほかの選択肢 / ex:解説 / fig:図
+const N=(p,d,o={})=>Object.assign({p,d},o);
+const Q=[
+/* ---------- 楽典（2年） ---------- */
+{c:'gaku',t:'音階',q:'1オクターブの音を、高さの順に階段のように並べたものを何といいますか。',a:'音階',d:['和音','音程','調号'],ex:'高さの順に並べた「音の階段」が音階。'},
+{c:'gaku',t:'全音・半音',q:'となり合う鍵盤どうし（間に鍵盤がない）の音の幅を何といいますか。',a:'半音',d:['全音','1度','1オクターブ'],ex:'となり合う鍵盤＝半音。黒鍵もふくめて数える。'},
+{c:'gaku',t:'全音・半音',q:'全音は、半音いくつ分ですか。',a:'半音2つ分',d:['半音1つ分','半音3つ分','半音4つ分'],ex:'全音＝半音2つ。'},
+{c:'gaku',t:'全音・半音',q:'黄色の2つの鍵盤の音の幅は、全音・半音のどちらですか。',fig:{t:'kb',k:['E','F']},a:'半音',d:['全音'],ex:'ミとファの間には黒鍵がない → となり合っているので半音。'},
+{c:'gaku',t:'全音・半音',q:'黄色の2つの鍵盤の音の幅は、全音・半音のどちらですか。',fig:{t:'kb',k:['C','D']},a:'全音',d:['半音'],ex:'ドとレの間に黒鍵が1つある → 半音2つ分で全音。'},
+{c:'gaku',t:'全音・半音',q:'黄色の2つの鍵盤の音の幅は、全音・半音のどちらですか。',fig:{t:'kb',k:['B','C2']},a:'半音',d:['全音'],ex:'シとドの間には黒鍵がない → 半音。'},
+{c:'gaku',t:'全音・半音',q:'黄色の2つの鍵盤の音の幅は、全音・半音のどちらですか。',fig:{t:'kb',k:['F','F#']},a:'半音',d:['全音'],ex:'白鍵と黒鍵でも、となり合っていれば半音。'},
+{c:'gaku',t:'全音・半音',q:'黄色の2つの鍵盤の音の幅は、全音・半音のどちらですか。',fig:{t:'kb',k:['G','A']},a:'全音',d:['半音'],ex:'ソとラの間に黒鍵が1つ → 全音。'},
+{c:'gaku',t:'全音・半音',q:'ハ長調の音階（ドレミファソラシド）で、半音になっているところはどこですか。',a:'ミとファ、シとド',d:['ドとレ、ソとラ','レとミ、ラとシ','ファとソ、ドとレ'],ex:'白鍵どうしで間に黒鍵がないのは「ミ‐ファ」と「シ‐ド」の2か所。'},
+{c:'gaku',t:'長音階',q:'長音階の全音・半音の並び方として正しいものはどれですか。',a:'全 全 半 全 全 全 半',d:['全 半 全 全 半 全 全','全 全 全 半 全 全 半','半 全 全 全 半 全 全'],ex:'ドから：ド全レ全ミ半ファ全ソ全ラ全シ半ド。',fig:{t:'staff',notes:['c4','d4','e4','f4','g4','a4','b4','c5'].map(p=>N(p,'w')),gap:30}},
+{c:'gaku',t:'短音階',q:'自然短音階の全音・半音の並び方として正しいものはどれですか。',a:'全 半 全 全 半 全 全',d:['全 全 半 全 全 全 半','全 全 全 半 全 全 半','半 全 全 半 全 全 全'],ex:'ラから：ラ全シ半ド全レ全ミ半ファ全ソ全ラ。',fig:{t:'staff',notes:['a4','b4','c5','d5','e5','f5','g5','a5'].map(p=>N(p,'w')),gap:30}},
+{c:'gaku',t:'長音階',q:'長調の主音を、階名で答えるとどれですか。',a:'ド',d:['ラ','ソ','ファ'],ex:'長調の主音は階名で「ド」、短調の主音は「ラ」。'},
+{c:'gaku',t:'短音階',q:'短調の主音を、階名で答えるとどれですか。',a:'ラ',d:['ド','ミ','シ'],ex:'短調は「ラ」から始まる音階（自然短音階）。'},
+{c:'gaku',t:'長音階',q:'一般に、長調・短調の曲の感じとして正しい組み合わせはどれですか。',a:'長調＝明るい感じ、短調＝暗い感じ',d:['長調＝暗い感じ、短調＝明るい感じ','長調も短調も同じ感じ','長調＝速い曲、短調＝遅い曲'],ex:'長調は明るく、短調は暗い感じがする。速さとは関係ない。'},
+{c:'gaku',t:'変化記号',q:'♯（シャープ）の意味はどれですか。',a:'半音上げる',d:['半音下げる','もとの高さにもどす','全音上げる'],ex:'♯＝半音上げる、♭＝半音下げる、♮＝もとにもどす。'},
+{c:'gaku',t:'変化記号',q:'♭（フラット）の意味はどれですか。',a:'半音下げる',d:['半音上げる','もとの高さにもどす','全音下げる'],ex:'♭＝半音下げる。'},
+{c:'gaku',t:'変化記号',q:'♮（ナチュラル）の意味はどれですか。',a:'もとの高さにもどす',d:['半音上げる','半音下げる','1オクターブ上げる'],ex:'♯や♭で変えた音を、もとの高さにもどす。'},
+{c:'gaku',t:'調号と調',q:'曲のはじめ（音部記号のすぐ右）にまとめて書く♯や♭を何といいますか。',a:'調号',d:['臨時記号','拍子記号','音部記号'],ex:'曲の最初にまとめて書いて、調を表すのが調号。'},
+{c:'gaku',t:'調号と調',q:'同じ調号をもつ長調と短調の関係を何といいますか。',a:'平行調',d:['移調','転調','主調'],ex:'例：ハ長調とイ短調（どちらも調号なし）は平行調。'},
+{c:'gaku',t:'調号と調',q:'調号がない長調と短調の組み合わせはどれですか。',a:'ハ長調・イ短調',d:['ト長調・ホ短調','ヘ長調・ニ短調','ハ長調・ニ短調'],ex:'調号なし＝ハ長調／イ短調。'},
+{c:'gaku',t:'調号と調',q:'この調号の長調はどれですか。',fig:{t:'staff',key:'#1',notes:[],sound:false},a:'ト長調',d:['ヘ長調','ハ長調','ニ長調'],ex:'♯1つ（ファに♯）＝ト長調／ホ短調。'},
+{c:'gaku',t:'調号と調',q:'この調号の短調はどれですか。',fig:{t:'staff',key:'#1',notes:[],sound:false},a:'ホ短調',d:['ニ短調','イ短調','ト短調'],ex:'♯1つ＝ト長調とホ短調（平行調）。'},
+{c:'gaku',t:'調号と調',q:'この調号の長調はどれですか。',fig:{t:'staff',key:'b1',notes:[],sound:false},a:'ヘ長調',d:['ト長調','ハ長調','変ロ長調'],ex:'♭1つ（シに♭）＝ヘ長調／ニ短調。'},
+{c:'gaku',t:'調号と調',q:'この調号の短調はどれですか。',fig:{t:'staff',key:'b1',notes:[],sound:false},a:'ニ短調',d:['ホ短調','イ短調','ヘ短調'],ex:'♭1つ＝ヘ長調とニ短調（平行調）。'},
+{c:'gaku',t:'調号と調',q:'ソから長音階（全全半全全全半）を作ると、♯がつく音はどれですか。',a:'ファ',d:['ド','シ','ミ'],ex:'ソ全ラ全シ半ド全レ全ミ全ファ♯半ソ。ミ‐ファは半音なので、全音にするためにファを半音上げる。だからト長調の調号は「ファに♯」。',fig:{t:'staff',notes:['g4','a4','b4','c5','d5','e5','f#5','g5'].map(p=>N(p,'w')),gap:36}},
+{c:'gaku',t:'調号と調',q:'ファから長音階を作ると、♭がつく音はどれですか。',a:'シ',d:['ミ','ラ','レ'],ex:'ファ全ソ全ラ半シ♭全ド…。ラ‐シは全音なので、半音にするためにシを半音下げる。だからヘ長調の調号は「シに♭」。'},
+{c:'gaku',t:'調号と調',q:'調号が同じとき、長調か短調かを見分ける手がかりとしてよく使うものはどれですか。',a:'曲の終わりの音',d:['曲の速さ','曲の長さ','曲の最初の強弱記号'],ex:'曲の終わりの音（主音で終わることが多い）を見る。ドで終われば長調、ラで終われば短調。'},
+{c:'gaku',t:'音名と階名',q:'「音名」の説明として正しいものはどれですか。',a:'音の高さそのものにつけられた名前',d:['調の中での役割を表す名前','和音につけられた名前','音の長さを表す名前'],ex:'音名＝高さそのもの（ハニホ…）。階名＝調の中の役割（長調の主音をドとする）。'},
+{c:'gaku',t:'音名と階名',q:'「階名」の説明として正しいものはどれですか。',a:'調の中での役割を表す名前（長調の主音をドとする）',d:['音の高さそのものにつけられた名前','ドイツ語の音の名前','楽器ごとの音の名前'],ex:'調が変わると、同じ高さの音でも階名は変わる。'},
+{c:'gaku',t:'音名と階名',q:'ト長調の主音（ソの高さ）を、階名で読むとどれですか。',a:'ド',d:['ソ','ト','ラ'],ex:'長調の主音は階名で「ド」。音名では「ト」。'},
+{c:'gaku',t:'音名と階名',q:'ヘ長調の主音を、日本の音名で答えるとどれですか。',a:'ヘ',d:['ハ','ト','ド'],ex:'「ヘ長調」の名前のとおり、主音の音名は「ヘ」（ファの高さ）。'},
+{c:'gaku',t:'音程',q:'音程（2つの音の高さのへだたり）は、何という単位で数えますか。',a:'度',d:['拍','段','階'],ex:'音程は「度」で数え、両はしの音もふくめる。'},
+{c:'gaku',t:'音程',q:'同じ高さの2つの音の音程は何度ですか。',a:'1度',d:['0度','2度','8度'],ex:'両はしをふくめて数えるので、同じ高さは「1度」（0度ではない）。'},
+{c:'gaku',t:'音程',q:'8度の音程を、別の言い方で何といいますか。',a:'1オクターブ',d:['全音','平行調','1小節'],ex:'ドから上のドまでが8度＝1オクターブ。'},
+{c:'gaku',t:'音程',q:'この2つの音の音程は何度ですか。',fig:{t:'staff',notes:[N('c4','w'),N('e4','w')]},a:'3度',d:['2度','4度','5度'],ex:'ド・レ・ミと、両はしをふくめて3つ → 3度。'},
+{c:'gaku',t:'音程',q:'この2つの音の音程は何度ですか。',fig:{t:'staff',notes:[N('c4','w'),N('a4','w')]},a:'6度',d:['5度','7度','4度'],ex:'ド・レ・ミ・ファ・ソ・ラ → 6度。'},
+{c:'gaku',t:'音程',q:'この2つの音の音程は何度ですか。',fig:{t:'staff',notes:[N('d4','w'),N('a4','w')]},a:'5度',d:['4度','6度','3度'],ex:'レ・ミ・ファ・ソ・ラ → 5度。'},
+{c:'gaku',t:'音程',q:'この2つの音の音程は何度ですか。',fig:{t:'staff',notes:[N('f4','w'),N('b4','w')]},a:'4度',d:['3度','5度','2度'],ex:'ファ・ソ・ラ・シ → 4度。'},
+{c:'gaku',t:'音程',q:'この2つの音の音程は何度ですか。',fig:{t:'staff',notes:[N('e4','w'),N('e5','w')]},a:'8度',d:['7度','1度','9度'],ex:'ミから上のミまで → 8度（1オクターブ）。'},
+{c:'gaku',t:'音程',q:'この2つの音の音程は何度ですか。',fig:{t:'staff',notes:[N('g4','w'),N('f5','w')]},a:'7度',d:['6度','8度','5度'],ex:'ソ・ラ・シ・ド・レ・ミ・ファ → 7度。'},
+{c:'gaku',t:'音程',q:'この2つの音の音程は何度ですか。',fig:{t:'staff',notes:[N('e4','w'),N('f4','w')]},a:'2度',d:['1度','3度','半音'],ex:'ミ・ファ → 2度。「半音」は鍵盤の幅のことで、音程の度数とは別。'},
+{c:'gaku',t:'付点・3連符',q:'付点音符の「付点」は、どんなはたらきをしますか。',a:'もとの音符の半分の長さをたす',d:['もとの音符の2倍にする','もとの音符を半分にする','音を短く切る'],ex:'付点＝もとの長さの半分をたす。'},
+{c:'gaku',t:'付点・3連符',q:'4分音符を1拍とすると、この音符は何拍ですか。',fig:{t:'staff',clef:false,notes:[N('g4','h',{dot:1})],sound:false},a:'3拍',d:['2拍','2拍半','4拍'],ex:'付点2分音符＝2拍＋（2拍の半分の）1拍＝3拍。'},
+{c:'gaku',t:'付点・3連符',q:'4分音符を1拍とすると、この音符は何拍ですか。',fig:{t:'staff',clef:false,notes:[N('g4','q',{dot:1})],sound:false},a:'1拍半',d:['1拍','2拍','3拍'],ex:'付点4分音符＝1拍＋半拍＝1拍半。'},
+{c:'gaku',t:'付点・3連符',q:'3連符の説明として正しいものはどれですか。',a:'2つ分の長さを3等分したもの',d:['3つの音を同じ高さで弾くもの','3拍子の曲だけで使う音符','3回くり返して演奏するもの'],ex:'例：8分音符2つ分（4分音符1つ分）の長さを3等分する。'},
+{c:'gaku',t:'付点・3連符',q:'4分音符を1拍とすると、この3連符全体の長さは何拍ですか。',fig:{t:'staff',clef:false,notes:[N('g4','e',{beam:1}),N('g4','e',{beam:1}),N('g4','e',{beam:1})],beam:[0,2],trip:[0,2],gap:34,sound:false},a:'1拍',d:['1拍半','3拍','半拍'],ex:'8分音符2つ分（＝1拍）の中に3つ入れたもの → 全体で1拍。'},
+{c:'gaku',t:'タイ・スラー',q:'この弧線（同じ高さの音をつないでいる）を何といいますか。',fig:{t:'staff',clef:false,notes:[N('g4','q'),N('g4','q')],tie:[0,1],sound:false},a:'タイ',d:['スラー','テヌート','フェルマータ'],ex:'同じ高さの音をつないで、1つの音として演奏する＝タイ。'},
+{c:'gaku',t:'タイ・スラー',q:'この弧線（ちがう高さの音にかかっている）を何といいますか。',fig:{t:'staff',clef:false,notes:[N('e4','q'),N('f4','q'),N('g4','q'),N('a4','q')],slur:[0,3],gap:40,sound:false},a:'スラー',d:['タイ','アクセント','クレシェンド'],ex:'いくつかの音を、なめらかに演奏する＝スラー。'},
+{c:'gaku',t:'タイ・スラー',q:'4分音符を1拍とすると、タイでつないだこの音は全部で何拍のばしますか。',fig:{t:'staff',clef:false,notes:[N('g4','h'),N('g4','q')],tie:[0,1],sound:false},a:'3拍',d:['2拍','1拍','4拍'],ex:'2分音符（2拍）＋4分音符（1拍）を1つの音として → 3拍。'},
+{c:'gaku',t:'奏法記号',q:'音符の下（上）についたこの点の記号の名前と意味はどれですか。',fig:{t:'staff',clef:false,notes:[N('g4','q',{art:'stac'})],sound:false},a:'スタッカート／その音を短く切って',d:['テヌート／音の長さを十分に保って','アクセント／目立たせて','フェルマータ／ほどよくのばす'],ex:'点＝スタッカート。'},
+{c:'gaku',t:'奏法記号',q:'音符についたこの横線の記号の名前と意味はどれですか。',fig:{t:'staff',clef:false,notes:[N('g4','q',{art:'ten'})],sound:false},a:'テヌート／その音の長さを十分に保って',d:['スタッカート／短く切って','アクセント／目立たせて','スラー／なめらかに'],ex:'横線＝テヌート。'},
+{c:'gaku',t:'奏法記号',q:'音符についたこの「＞」の記号の名前と意味はどれですか。',fig:{t:'staff',clef:false,notes:[N('g4','q',{art:'acc'})],sound:false},a:'アクセント／その音を目立たせて、強調して',d:['デクレシェンド／だんだん弱く','テヌート／長さを十分に保って','スタッカート／短く切って'],ex:'＞＝アクセント。形の似た「デクレシェンド（だんだん弱く）」は、もっと長く横に広がる記号。'},
+{c:'gaku',t:'奏法記号',q:'この記号の名前と意味はどれですか。',fig:{t:'staff',clef:false,notes:[N('g4','h',{art:'ferm'})],sound:false},a:'フェルマータ／その音符（休符）をほどよくのばす',d:['アクセント／目立たせて','テヌート／長さを十分に保って','タイ／同じ高さをつなぐ'],ex:'半円と点＝フェルマータ。'},
+{c:'gaku',t:'反復記号',q:'「D.C.（ダ・カーポ）」の意味はどれですか。',a:'はじめにもどる',d:['セーニョ記号にもどる','終わり','だんだん遅く'],ex:'D.C.＝曲のはじめにもどる。'},
+{c:'gaku',t:'反復記号',q:'「D.S.（ダル・セーニョ）」の意味はどれですか。',a:'セーニョ記号（𝄋）にもどる',d:['はじめにもどる','終わり','もとの速さで'],ex:'D.S.＝セーニョ記号のところにもどる。'},
+{c:'gaku',t:'反復記号',q:'「Fine（フィーネ）」の意味はどれですか。',a:'終わり（1回目は通りすぎる）',d:['はじめにもどる','くり返す','ほどよくのばす'],ex:'D.C.やD.S.でもどってきた2回目に、Fineで終わる。'},
+{c:'gaku',t:'反復記号',q:'この楽譜の演奏順として正しいものはどれですか。',fig:{t:'bars',m:[{l:'A'},{l:'B',segno:1},{l:'C',fine:1},{l:'D',ds:1}]},a:'A→B→C→D→B→C',d:['A→B→C→D→A→B→C','A→B→C→D→B→C→D','A→B→C→D→B'],ex:'DのD.S.でセーニョ（Bの頭）にもどり、CのFineで終わる。'},
+{c:'gaku',t:'反復記号',q:'この楽譜の演奏順として正しいものはどれですか。',fig:{t:'bars',m:[{l:'A'},{l:'B',fine:1},{l:'C'},{l:'D',dc:1}]},a:'A→B→C→D→A→B',d:['A→B→C→D→A→B→C→D','A→B→C→D→B','A→B→A→B→C→D'],ex:'DのD.C.で曲のはじめ（A）にもどり、BのFineで終わる。'},
+
+/* ---------- 楽典（1年の復習） ---------- */
+{c:'gaku1',t:'音部記号',q:'ト音記号は、五線のどの線が「ト（ソ）」であることを示しますか。',a:'第2線',d:['第1線','第3線','第4線'],ex:'ト音記号は第2線から書き始める。ヘ音記号は第4線がヘ（ファ）。'},
+{c:'gaku1',t:'音部記号',q:'ヘ音記号は、五線のどの線が「ヘ（ファ）」であることを示しますか。',a:'第4線',d:['第2線','第3線','第5線'],ex:'ヘ音記号の2つの点は第4線をはさむ。'},
+{c:'gaku1',t:'音名',q:'「ラ」を日本の音名で答えるとどれですか。',a:'イ',d:['ハ','ト','ロ'],ex:'ドレミファソラシ＝ハニホヘトイロ。イロハはラから。'},
+{c:'gaku1',t:'音名',q:'「シ」をドイツ語の音名で答えるとどれですか。',a:'H（ハー）',d:['B（ベー）','C（ツェー）','S（エス）'],ex:'ドイツ語ではシ＝H。B（ベー）はシ♭のこと。'},
+{c:'gaku1',t:'音名',q:'「ミ」をドイツ語の音名で答えるとどれですか。',a:'E（エー）',d:['F（エフ）','D（デー）','A（アー）'],ex:'C D E F G A H ＝ ド レ ミ ファ ソ ラ シ。'},
+{c:'gaku1',t:'拍子',q:'4分の3拍子の「下の数字4」は何を表していますか。',a:'4分音符を1拍とすること',d:['1小節に4拍あること','4小節でひとまとまりのこと','4回くり返すこと'],ex:'下の数字＝1拍にする音符、上の数字＝1小節の拍の数。'},
+{c:'gaku1',t:'拍子',q:'4分の3拍子の1小節に、2分音符とあと1つ入る音符はどれですか。',a:'4分音符',d:['2分音符','8分音符','全音符'],ex:'3拍＝2分音符（2拍）＋4分音符（1拍）。'},
+{c:'gaku1',t:'強弱記号',q:'mf の読み方と意味はどれですか。',a:'メッゾ フォルテ／少し強く',d:['メッゾ ピアノ／少し弱く','フォルテ／強く','フォルティッシモ／とても強く'],ex:'mp＝少し弱く、mf＝少し強く。'},
+{c:'gaku1',t:'強弱記号',q:'強弱記号を弱い順に並べたものはどれですか。',a:'pp → p → mp → mf → f → ff',d:['p → pp → mp → mf → ff → f','pp → p → mf → mp → f → ff','ff → f → mf → mp → p → pp'],ex:'ピアニッシモ→ピアノ→メッゾピアノ→メッゾフォルテ→フォルテ→フォルティッシモ。'},
+{c:'gaku1',t:'速度記号',q:'速度を表すことばを、遅い順に並べたものはどれですか。',a:'Adagio → Andante → Moderato → Allegro',d:['Andante → Adagio → Moderato → Allegro','Adagio → Moderato → Andante → Allegro','Allegro → Moderato → Andante → Adagio'],ex:'ゆるやかに → 歩くような速さで → 中ぐらいの速さで → 速く。'},
+{c:'gaku1',t:'速度記号',q:'「rit.（リタルダンド）」の意味はどれですか。',a:'だんだん遅く',d:['もとの速さで','だんだん強く','速く'],ex:'rit.＝だんだん遅く。a tempo＝もとの速さで。'},
+{c:'gaku1',t:'強弱記号',q:'「cresc.（クレシェンド）」の意味はどれですか。',a:'だんだん強く',d:['だんだん弱く','だんだん速く','だんだん遅く'],ex:'cresc.＝だんだん強く。dim.／decresc.＝だんだん弱く。'},
+
+/* ---------- 越天楽 ---------- */
+{c:'eten',t:'雅楽',q:'雅楽は、何年以上も前からわが国で表現されてきた音楽ですか。',a:'1000年以上',d:['100年以上','300年以上','5000年以上'],ex:'雅楽は1000年以上も前から受けつがれてきた。'},
+{c:'eten',t:'雅楽',q:'雅楽の楽器だけで合奏し、舞（まい）をともなわない形を何といいますか。',a:'管絃（かんげん）',d:['舞楽（ぶがく）','唱歌（しょうが）','序破急（じょはきゅう）'],ex:'楽器だけ＝管絃、舞をともなう＝舞楽。'},
+{c:'eten',t:'雅楽',q:'舞（まい）をともなう雅楽を何といいますか。',a:'舞楽（ぶがく）',d:['管絃（かんげん）','唐楽（とうがく）','塩梅（えんばい）'],ex:'舞楽には左舞と右舞がある。'},
+{c:'eten',t:'雅楽',q:'授業で鑑賞した「越天楽」は、雅楽のどの形の曲ですか。',a:'管絃',d:['舞楽','能','歌舞伎'],ex:'「越天楽」（平調）は管絃の曲。'},
+{c:'eten',t:'雅楽',q:'現在、管絃で演奏されるのはどの曲ですか。',a:'唐楽の曲だけ',d:['高麗楽の曲だけ','唐楽と高麗楽の両方','日本で作られた歌だけ'],ex:'管絃で演奏されるのは唐楽の曲だけ。'},
+{c:'eten',t:'雅楽',q:'舞楽の「左舞（さまい）」は、どこが起源の曲ですか。',a:'唐楽（中国が起源）',d:['高麗楽（朝鮮半島が起源）','日本の民謡','インドの音楽'],ex:'左舞＝唐楽（中国起源）、右舞＝高麗楽（朝鮮半島起源）。'},
+{c:'eten',t:'雅楽',q:'舞楽の「右舞（うまい）」は、どこが起源の曲ですか。',a:'高麗楽（朝鮮半島が起源）',d:['唐楽（中国が起源）','日本の民謡','インドの音楽'],ex:'右舞＝高麗楽（こまがく）。'},
+{c:'eten',t:'雅楽',q:'「越天楽」（授業で鑑賞したもの）の調の名前はどれですか。',a:'平調（ひょうじょう）',d:['ハ長調','壱越調（いちこつちょう）','イ短調'],ex:'授業で聴いたのは「平調 越天楽」。'},
+{c:'eten',t:'序破急',q:'「序破急」の説明として正しいものはどれですか。',a:'序・破・急と進むにつれて、速度がしだいに速くなる',d:['序・破・急と進むにつれて、だんだん遅くなる','3つの楽器が順番に演奏する','3回同じ旋律をくり返す'],ex:'もとは雅楽の用語。日本の伝統芸能に共通する考え方。'},
+{c:'eten',t:'楽器',q:'雅楽の楽器の分け方で、篳篥・竜笛・笙はどのなかまですか。',a:'吹きもの',d:['弾きもの','打ちもの','歌いもの'],ex:'吹きもの＝竜笛・篳篥・笙。弾きもの＝楽箏・楽琵琶。打ちもの＝鉦鼓・羯鼓・釣太鼓。'},
+{c:'eten',t:'楽器',q:'楽箏（がくそう）・楽琵琶（がくびわ）はどのなかまですか。',a:'弾きもの',d:['吹きもの','打ちもの','歌いもの'],ex:'絃を弾く楽器＝弾きもの。'},
+{c:'eten',t:'楽器',q:'鉦鼓（しょうこ）・羯鼓（かっこ）・釣太鼓（つりだいこ）はどのなかまですか。',a:'打ちもの',d:['吹きもの','弾きもの','歌いもの'],ex:'打って音を出す楽器＝打ちもの。'},
+{c:'eten',t:'楽器',q:'ヨシのリードで音を出し、主旋律を受けもつ楽器はどれですか。',a:'篳篥（ひちりき）',d:['竜笛（りゅうてき）','笙（しょう）','楽琵琶（がくびわ）'],ex:'篳篥＝ヨシのリード、主旋律。'},
+{c:'eten',t:'楽器',q:'吹いても吸っても音が出て、和音を奏でる楽器はどれですか。',a:'笙（しょう）',d:['篳篥（ひちりき）','竜笛（りゅうてき）','鉦鼓（しょうこ）'],ex:'笙は息を吹いても吸っても鳴る。和音担当。'},
+{c:'eten',t:'楽器',q:'竹の笛で、高い音域で主旋律や装飾音を吹く楽器はどれですか。',a:'竜笛（りゅうてき）',d:['篳篥（ひちりき）','笙（しょう）','楽箏（がくそう）'],ex:'竜笛＝竹の横笛。'},
+{c:'eten',t:'楽器',q:'13本の絃を、指につけた爪で弾く楽器はどれですか。',a:'楽箏（がくそう）',d:['楽琵琶（がくびわ）','羯鼓（かっこ）','笙（しょう）'],ex:'楽箏＝13本の絃・爪。楽琵琶＝4本の絃・ばち。'},
+{c:'eten',t:'楽器',q:'4本の絃を、ばちで弾く楽器はどれですか。',a:'楽琵琶（がくびわ）',d:['楽箏（がくそう）','釣太鼓（つりだいこ）','竜笛（りゅうてき）'],ex:'楽琵琶は4本の絃をばちで弾く。'},
+{c:'eten',t:'楽器',q:'皮の両面を打ち、全体のテンポをリードする楽器はどれですか。',a:'羯鼓（かっこ）',d:['釣太鼓（つりだいこ）','鉦鼓（しょうこ）','楽琵琶（がくびわ）'],ex:'羯鼓は合奏全体のテンポをリードする。'},
+{c:'eten',t:'楽器',q:'金属製で、2本のばちで皿状のへこんだ面を打つ楽器はどれですか。',a:'鉦鼓（しょうこ）',d:['羯鼓（かっこ）','釣太鼓（つりだいこ）','笙（しょう）'],ex:'鉦鼓＝金属製の打ちもの。'},
+{c:'eten',t:'楽器',q:'2本のばちで、太鼓の片面を打つ楽器はどれですか。',a:'釣太鼓（つりだいこ）',d:['羯鼓（かっこ）','鉦鼓（しょうこ）','楽箏（がくそう）'],ex:'釣太鼓＝片面を打つ。羯鼓＝両面を打つ。'},
+{c:'eten',t:'楽器',q:'「篳篥」の読み方はどれですか。',a:'ひちりき',d:['しょう','りゅうてき','かっこ'],ex:'篳篥＝ひちりき。'},
+{c:'eten',t:'楽器',q:'「羯鼓」の読み方はどれですか。',a:'かっこ',d:['しょうこ','つりだいこ','がくそう'],ex:'羯鼓＝かっこ、鉦鼓＝しょうこ。'},
+{c:'eten',t:'唱歌',q:'「唱歌（しょうが）」の説明として正しいものはどれですか。',a:'楽器の音をまねしてうたい、旋律や奏法を覚えたり伝えたりするもの',d:['舞にあわせて歌う歌詞のある歌','楽譜を見ずに即興で歌うこと','楽器を使わずに手拍子だけで演奏すること'],ex:'例：篳篥の唱歌「チーラー ロヲルロ…」。'},
+{c:'eten',t:'唱歌',q:'「越天楽」の膝打ちで、1・2拍と3・4拍の打ち方の組み合わせはどれですか。',a:'1・2拍は上から、3・4拍は横から',d:['1・2拍は横から、3・4拍は上から','全部上から','1拍目だけ強く上から'],ex:'膝打ちで拍をとりながら唱歌をうたった。'},
+{c:'eten',t:'奏法',q:'篳篥で、同じ運指のまま音の高さや音色・音量を変化させる装飾的な奏法を何といいますか。',a:'塩梅（えんばい）',d:['唱歌（しょうが）','序破急（じょはきゅう）','音取（ねとり）'],ex:'音と音のあいだを、ずり上げるようにつなぐ独特の表現。'},
+
+/* ---------- ボレロ ---------- */
+{c:'bol',t:'作曲者',q:'「ボレロ」を作曲したのはだれですか。',a:'ラヴェル',d:['ベートーヴェン','スメタナ','ドビュッシー'],ex:'モーリス・ラヴェル（1875〜1937）。'},
+{c:'bol',t:'作曲者',q:'ラヴェルはどこの国の作曲家ですか。',a:'フランス',d:['スペイン','ドイツ','イタリア'],ex:'フランスの作曲家。スペインとの国境に近いバスク地方の生まれ。'},
+{c:'bol',t:'作曲者',q:'楽器の使い方がとても上手だったラヴェルは、何とよばれましたか。',a:'オーケストラの魔術師',d:['交響曲の父','ピアノの詩人','音楽の父'],ex:'楽器の組み合わせ・使い方の名人だった。'},
+{c:'bol',t:'作品',q:'「ボレロ」が作られた年はどれですか。',a:'1928年',d:['1828年','1898年','1958年'],ex:'1928年、バレエのための音楽として作られた。'},
+{c:'bol',t:'作品',q:'「ボレロ」は、もともと何のための音楽として作られましたか。',a:'バレエ（おどり）',d:['オペラ','映画','行進'],ex:'踊り手イダ・ルビンシテインの依頼で作られたバレエ音楽。'},
+{c:'bol',t:'作品',q:'曲名の「ボレロ」とは何のことですか。',a:'スペインの舞曲（おどりの音楽）の名前',d:['フランスの歌の名前','小太鼓の別名','作曲者の故郷の名前'],ex:'ボレロ＝スペインの舞曲。'},
+{c:'bol',t:'変わらないもの',q:'「ボレロ」は何拍子ですか。',a:'3拍子',d:['2拍子','4拍子','6拍子'],ex:'3拍子。小太鼓は細かく鳴るが、拍は1・2・3のまとまりで進む。'},
+{c:'bol',t:'変わらないもの',q:'最初から最後まで、同じリズムをくり返し続ける楽器はどれですか。',a:'小太鼓（スネアドラム）',d:['ティンパニ','大太鼓','トライアングル'],ex:'2小節でひとまとまりのリズムを、ずっとくり返す。'},
+{c:'bol',t:'変わらないもの',q:'一定の音型（リズムなど）をくり返すことを何といいますか。',a:'オスティナート',d:['クレシェンド','フェルマータ','アクセント'],ex:'小太鼓のリズムはオスティナート。旋律の主役が交代しても、曲をつなぎ続ける。'},
+{c:'bol',t:'変わらないもの',q:'「ボレロ」の速さはどうなっていますか。',a:'最初から最後まで、ほとんど変わらない',d:['だんだん速くなる','だんだん遅くなる','途中で何度も変わる'],ex:'速さは変わらない。変わるのは楽器・音色・強弱・楽器の数。'},
+{c:'bol',t:'変わらないもの',q:'「ボレロ」の旋律について正しいものはどれですか。',a:'2種類の旋律（A・B）をくり返す',d:['毎回ちがう新しい旋律が出てくる','1種類の旋律だけをくり返す','4種類の旋律を順番に演奏する'],ex:'基本は A・A・B・B の順。'},
+{c:'bol',t:'変わらないもの',q:'「ボレロ」で、ずっと変わらないものの組み合わせはどれですか。',a:'小太鼓のリズム・速さ・2種類の旋律',d:['旋律を演奏する楽器・強弱','強弱・重なる楽器の数','小太鼓のリズム・強弱'],ex:'変わらない：リズム・速さ・旋律。変わる：楽器（音色）・強弱・楽器の数。'},
+{c:'bol',t:'変わっていくもの',q:'「ボレロ」で、だんだん変わっていくものの組み合わせはどれですか。',a:'旋律を演奏する楽器（音色）・強弱・重なる楽器の数',d:['速さ・拍子・旋律','小太鼓のリズム・速さ','拍子・旋律・小太鼓のリズム'],ex:'同じものを保ちながら、響きが変わっていくのがこの曲のおもしろさ。'},
+{c:'bol',t:'変わっていくもの',q:'「ボレロ」の強弱の変化として正しいものはどれですか。',a:'とても弱く（pp）始まり、少しずつ強くなって最後はとても強くなる',d:['とても強く始まり、だんだん弱くなる','ずっと同じ強さ','強い・弱いを交互にくり返す'],ex:'曲全体が、長い長いクレシェンドになっている。'},
+{c:'bol',t:'楽器のリレー',q:'最初に旋律（A）を演奏する楽器はどれですか。',a:'フルート',d:['クラリネット','トランペット','ヴァイオリン'],ex:'小太鼓とフルートだけの、とても弱い音から始まる。'},
+{c:'bol',t:'楽器のリレー',q:'2回目に旋律（A）を演奏する楽器はどれですか。',a:'クラリネット',d:['フルート','ファゴット','トロンボーン'],ex:'1回目フルート → 2回目クラリネット（どちらも旋律A）。'},
+{c:'bol',t:'楽器のリレー',q:'3回目、はじめて旋律Bを演奏する楽器はどれですか。',a:'ファゴット',d:['オーボエ','フルート','ホルン'],ex:'旋律Bはファゴット → 小クラリネットの順。'},
+{c:'bol',t:'楽器のリレー',q:'旋律をリレーする楽器の順として正しいもの（1〜3回目）はどれですか。',a:'フルート → クラリネット → ファゴット',d:['クラリネット → フルート → ファゴット','フルート → ファゴット → クラリネット','トランペット → フルート → クラリネット'],ex:'1 フルート、2 クラリネット、3 ファゴット、4 小クラリネット…'},
+{c:'bol',t:'楽器のリレー',q:'旋律のリレーに登場する、オーケストラでは珍しい楽器はどれですか。',a:'サクソフォーン（テナー・サックス、ソプラノ・サックス）',d:['エレキギター','和太鼓','パイプオルガン'],ex:'7回目テナー・サックス、8回目ソプラノ・サックス（旋律B）。'},
+{c:'bol',t:'楽器のリレー',q:'11回目に、旋律Bをソロで演奏する金管楽器はどれですか。',a:'トロンボーン',d:['トランペット','ホルン','チューバ'],ex:'11回目はトロンボーンのソロ。'},
+{c:'bol',t:'楽器のリレー',q:'曲の後半、旋律を演奏する楽器の重なりはどうなっていきますか。',a:'木管 → 弦楽器 → 金管と加わり、最後はほぼオーケストラ全員になる',d:['だんだん楽器が減って、最後は小太鼓だけになる','ずっと同じ楽器のまま','金管 → 木管 → 弦楽器の順に入れかわる'],ex:'12回目 木管、13・14回目 弦楽器が加わる、15・16回目 金管も加わる、17・18回目 ほぼ全員。'},
+{c:'bol',t:'終わり',q:'終わり近くで急に起こる変化はどれですか。',a:'調が変わる（転調）',d:['速さが急に遅くなる','拍子が4拍子になる','小太鼓が止まって無音になる'],ex:'ハ長調を中心とした響きが、終盤で急にホ長調へ移る。そのあとハ長調にもどり、一気にもり上がって、くずれ落ちるように終わる。'},
+{c:'bol',t:'終わり',q:'「ボレロ」の終わり方として正しいものはどれですか。',a:'転調のあと一気にもり上がり、くずれ落ちるように終わる',d:['だんだん弱くなって静かに消える','フルートのソロで静かに終わる','最初と同じ小太鼓だけで終わる'],ex:'長く同じ土台が続いたからこそ、最後の変化が強く印象に残る。'},
+{c:'bol',t:'聴き方',q:'「3拍子」と「3連符」のちがいとして正しいものはどれですか。',a:'3拍子は小節の中の拍のまとまり、3連符はある長さを3つに分ける方法',d:['どちらも同じ意味','3拍子は3つの音が必ず鳴ること','3連符は3小節をひとまとまりにすること'],ex:'3拍子だからといって、音が必ず3回鳴るわけではない。'},
+{c:'bol',t:'聴き方',q:'「同じくり返しなのに、なぜあきないか」を説明するときの根拠として最も適切なものはどれですか。',a:'同じ旋律でも演奏する楽器が次々に変わり、楽器の数もふえて強くなっていくから',d:['速さがどんどん速くなるから','毎回まったく新しい旋律が出てくるから','小太鼓のリズムが毎回ちがうから'],ex:'聴き取った「変わるもの」（音色・強弱・楽器の数）を根拠にする。'},
+];
+Q.forEach((q,i)=>q.id=q.c+'-'+i);
+
+/* ===================== まとめ ===================== */
+// [ ] で囲んだ語＝赤字（かくせる語）。図の中の ["c4",…] は対象外にするため、" < > をふくむものは変換しない
+const K=s=>s.replace(/\[([^\]"<>]+)\]/g,'<span class="k">$1</span>');
+// 音階の「全・半」のならび図
+function stepsHTML(names,pat){return '<div class="steps">'+names.map((n,i)=>`<b>${n}</b>`+(i<pat.length?`<i class="${pat[i]==='半'?'h':''}">${pat[i]}</i>`:'')).join('')+'</div>'}
+const sfig=(notes,o={})=>figHTML(Object.assign({t:'staff',clef:false,notes,sound:false},o));
+const SUM={
+gaku:{name:'楽典（2年）',sub:'音階と調・音程とリズムの記号',html:K(`
+<div class="map"><b>🗺 この単元の流れ</b>
+<ol><li>音の幅には「半音」と「全音」がある（①）</li>
+<li>その並べ方で「長音階・短音階」が決まる（②）</li>
+<li>別の音から同じ並べ方を作ると♯や♭が必要になる → それが「調号」（③④⑤）</li>
+<li>あとは楽譜の記号を覚える（⑥音程 ⑦音の長さ ⑧奏法 ⑨反復）</li></ol></div>
+
+<h3>① 半音と全音（ここが全部の土台）</h3>
+<ul><li>となり合う鍵盤どうし（黒鍵もふくめる）＝[半音]</li>
+<li>半音2つ分＝[全音]</li></ul>
+${figHTML({t:'kb',k:['E','F','B','C2']})}
+<ul><li>白鍵どうしでも、間に黒鍵がない[ミ‐ファ]と[シ‐ド]は半音。ほかの白鍵どうしは全音</li></ul>
+<div class="tip">💡 見分け方：2つの鍵盤の間に、鍵盤が<b>1つはさまっていれば全音</b>、<b>はさまっていなければ半音</b>。白鍵と黒鍵がとなり合っていても半音。</div>
+
+<h3>② 音階（長音階と短音階）</h3>
+<ul><li>1オクターブの音を高さの順に、階段のように並べたもの＝[音階]</li></ul>
+<table class="t"><tr><th>種類</th><th>全音・半音の並び方</th><th>主音（階名）</th><th>感じ</th></tr>
+<tr><td>長音階</td><td>[全 全 半 全 全 全 半]</td><td>[ド]</td><td>[明るい]</td></tr>
+<tr><td>自然短音階</td><td>[全 半 全 全 半 全 全]</td><td>[ラ]</td><td>[暗い]</td></tr></table>
+<p class="cap">長音階（ハ長調＝ドから）</p>
+${stepsHTML(['ド','レ','ミ','ファ','ソ','ラ','シ','ド'],'全全半全全全半')}
+<p class="cap">自然短音階（イ短調＝ラから）</p>
+${stepsHTML(['ラ','シ','ド','レ','ミ','ファ','ソ','ラ'],'全半全全半全全')}
+<div class="tip">💡 並び方は丸暗記しなくても、白鍵だけで弾いてみれば出てくる。半音になるのは、どちらの音階でも「ミ‐ファ」と「シ‐ド」のところ。</div>
+
+<h3>③ 変化記号</h3>
+<table class="t"><tr><th>記号</th><th>読み方</th><th>意味</th></tr>
+<tr><td>♯</td><td>[シャープ]</td><td>[半音上げる]</td></tr>
+<tr><td>♭</td><td>[フラット]</td><td>[半音下げる]</td></tr>
+<tr><td>♮</td><td>[ナチュラル]</td><td>[もとの高さにもどす]</td></tr></table>
+
+<h3>④ 調号と調</h3>
+<p><b>なぜ♯や♭がつくの？</b>　ド以外の音から長音階（全全半全全全半）を作ると、白鍵だけでは並び方が合わなくなるから。</p>
+<ul><li>ソから作る：ミ‐ファが半音でせまい → [ファ]を半音上げる（♯） → [ト長調]</li>
+<li>ファから作る：ラ‐シが全音で広い → [シ]を半音下げる（♭） → [ヘ長調]</li>
+<li>この♯や♭を、曲のはじめ（音部記号のすぐ右）にまとめて書いたもの＝[調号]</li></ul>
+<table class="t"><tr><th>調号</th><th>長調</th><th>短調</th></tr>
+<tr><td>なし</td><td>[ハ長調]</td><td>[イ短調]</td></tr>
+<tr><td>♯1つ（ファにつく）${figHTML({t:'staff',key:'#1',notes:[],sound:false})}</td><td>[ト長調]</td><td>[ホ短調]</td></tr>
+<tr><td>♭1つ（シにつく）${figHTML({t:'staff',key:'b1',notes:[],sound:false})}</td><td>[ヘ長調]</td><td>[ニ短調]</td></tr></table>
+<ul><li>同じ調号をもつ長調と短調の関係＝[平行調]（例：ハ長調とイ短調）</li>
+<li>長調か短調かは、曲の[終わりの音]で見分ける（階名のドで終われば長調、ラで終われば短調）</li></ul>
+
+<h3>⑤ 音名と階名</h3>
+<table class="t"><tr><th>名前</th><th>何を表す？</th><th>ト長調の主音（ソの高さ）なら</th></tr>
+<tr><td>[音名]</td><td>音の高さそのものの名前（ハニホヘトイロ）。調が変わっても変わらない</td><td>ト</td></tr>
+<tr><td>[階名]</td><td>調の中での役割を表す名前（ドレミ…）。長調の主音を[ド]と読む</td><td>ド</td></tr></table>
+<div class="tip">💡 「ヘ長調」「ト長調」の最初の1文字が、主音の音名。ヘ長調の主音＝ヘ（ファの高さ）。</div>
+
+<h3>⑥ 音程</h3>
+<ul><li>2つの音の高さのへだたり＝音程。[度]で数える</li>
+<li>数え方：[両はしをふくめて]、音の名前を順に数える</li></ul>
+${figHTML({t:'staff',notes:[N('c4','w'),N('e4','w')]})}
+<p class="cap">ド・レ・ミ と3つ数えるので [3度]</p>
+<table class="t"><tr><th>2つの音</th><th>数え方</th><th>音程</th></tr>
+<tr><td>ド と 同じ高さのド</td><td>ド</td><td>[1度]</td></tr>
+<tr><td>ド → ソ</td><td>ド・レ・ミ・ファ・ソ</td><td>[5度]</td></tr>
+<tr><td>ド → ラ</td><td>ド・レ・ミ・ファ・ソ・ラ</td><td>[6度]</td></tr>
+<tr><td>ド → 上のド</td><td>ド・レ・ミ・ファ・ソ・ラ・シ・ド</td><td>8度＝[1オクターブ]</td></tr></table>
+<div class="tip">⚠ 同じ高さは「0度」ではなく「1度」。また「半音・全音」は鍵盤の幅、「度」は音程の数え方で、別のもの（ミ→ファは「半音」で「2度」）。</div>
+
+<h3>⑦ 音の長さの記号（付点・3連符・タイ・スラー）</h3>
+<ul><li>付点＝もとの音符の長さの[半分]をたす</li></ul>
+<table class="t"><tr><th>音符</th><th>計算（4分音符＝1拍）</th><th>長さ</th></tr>
+<tr><td>付点2分音符${sfig([N('g4','h',{dot:1})])}</td><td>2拍 ＋ 1拍</td><td>[3拍]</td></tr>
+<tr><td>付点4分音符${sfig([N('g4','q',{dot:1})])}</td><td>1拍 ＋ 半拍</td><td>[1拍半]</td></tr>
+<tr><td>8分音符の3連符${sfig([N('g4','e',{beam:1}),N('g4','e',{beam:1}),N('g4','e',{beam:1})],{beam:[0,2],trip:[0,2],gap:34})}</td><td>8分音符2つ分を3つに分ける</td><td>全体で[1拍]</td></tr></table>
+<ul><li>3連符＝2つ分の長さを[3等分]したもの</li></ul>
+<table class="t"><tr><th>弧線</th><th>名前</th><th>意味</th></tr>
+<tr><td>${sfig([N('g4','h'),N('g4','q')],{tie:[0,1]})}同じ高さの音をつなぐ</td><td>[タイ]</td><td>つないだ音を[1つの音]としてのばす（左の図は 2拍＋1拍＝3拍）</td></tr>
+<tr><td>${sfig([N('e4','q'),N('f4','q'),N('g4','q'),N('a4','q')],{slur:[0,3],gap:40})}ちがう高さの音にかかる</td><td>[スラー]</td><td>いくつかの音を[なめらかに]演奏する</td></tr></table>
+<div class="tip">💡 弧線を見たら、両はしの音の高さをくらべる。<b>同じ高さならタイ、ちがう高さならスラー</b>。</div>
+
+<h3>⑧ 奏法記号</h3>
+<table class="t"><tr><th>記号</th><th>形</th><th>名前</th><th>意味</th></tr>
+<tr><td>${sfig([N('g4','q',{art:'stac'})])}</td><td>点</td><td>[スタッカート]</td><td>その音を[短く切って]</td></tr>
+<tr><td>${sfig([N('g4','q',{art:'ten'})])}</td><td>横線</td><td>[テヌート]</td><td>その音の[長さを十分に保って]</td></tr>
+<tr><td>${sfig([N('g4','q',{art:'acc'})])}</td><td>＞</td><td>[アクセント]</td><td>その音を[目立たせて、強調して]</td></tr>
+<tr><td>${sfig([N('g4','h',{art:'ferm'})])}</td><td>半円と点</td><td>[フェルマータ]</td><td>その音符（休符）を[ほどよくのばす]</td></tr></table>
+<div class="tip">💡 スタッカート（短く）とテヌート（十分に保つ）は反対の意味。アクセント「＞」は音符1つにつく小さな記号で、横に長くのびる「だんだん弱く」の記号とは別。</div>
+
+<h3>⑨ 反復記号</h3>
+<table class="t"><tr><th>記号</th><th>読み方</th><th>意味</th></tr>
+<tr><td>D.C.</td><td>ダ・カーポ</td><td>[はじめにもどる]</td></tr>
+<tr><td>D.S.</td><td>ダル・セーニョ</td><td>[セーニョ記号にもどる]</td></tr>
+<tr><td>Fine</td><td>フィーネ</td><td>[終わり]（1回目は通りすぎ、もどってきた2回目に終わる）</td></tr></table>
+<p><b>たどり方</b>：① まず最後まで進む → ② D.C. か D.S. でもどる → ③ Fine で止まる</p>
+${figHTML({t:'bars',m:[{l:'A'},{l:'B',segno:1},{l:'C',fine:1},{l:'D',ds:1}]})}
+<p class="cap">D.S. でセーニョ（Bの頭）にもどり、Fine で終わる → [A→B→C→D→B→C]</p>
+${figHTML({t:'bars',m:[{l:'A'},{l:'B',fine:1},{l:'C'},{l:'D',dc:1}]})}
+<p class="cap">D.C. ではじめ（A）にもどり、Fine で終わる → [A→B→C→D→A→B]</p>`)},
+
+gaku1:{name:'楽典（1年の復習）',sub:'楽譜を読む基礎',html:K(`
+<div class="map"><b>🗺 1年で習ったこと</b>　2年の内容の土台。あやしいところだけ見直そう。</div>
+<h3>① 五線と音部記号</h3>
+<ul><li>線・間は[下から]数える。五線からはみ出す音は[加線]をたして書く</li></ul>
+<table class="t"><tr><th>記号</th><th>基準になる線</th><th>使う音域</th></tr>
+<tr><td>[ト音記号]</td><td>[第2線]がト（ソ）</td><td>高い音</td></tr>
+<tr><td>[ヘ音記号]</td><td>[第4線]がヘ（ファ）</td><td>低い音</td></tr></table>
+<h3>② 音名</h3>
+<table class="t"><tr><th>ドレミ</th><td>ド</td><td>レ</td><td>ミ</td><td>ファ</td><td>ソ</td><td>ラ</td><td>シ</td></tr>
+<tr><th>日本</th><td>[ハ]</td><td>[ニ]</td><td>[ホ]</td><td>[ヘ]</td><td>[ト]</td><td>[イ]</td><td>[ロ]</td></tr>
+<tr><th>ドイツ語</th><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>A</td><td>[H]</td></tr></table>
+<div class="tip">⚠ 「イロハ」はラから始まる（ラ＝イ）。ドイツ語ではシ＝H（ハー）で、B（ベー）は[シ♭]のこと。</div>
+<h3>③ 拍子</h3>
+<ul><li>4分の3拍子：下の数字＝[1拍にする音符]（4分音符）、上の数字＝[1小節の拍の数]（3拍）</li>
+<li>例：4分の3拍子の1小節 ＝ 2分音符（2拍）＋4分音符（1拍）</li></ul>
+<h3>④ 強弱記号</h3>
+<ul><li>弱い順：[pp → p → mp → mf → f → ff]</li>
+<li>m（メッゾ）＝「少し」。mp＝メッゾ ピアノ（少し弱く）、mf＝[メッゾ フォルテ]（少し強く）</li>
+<li>cresc.＝[だんだん強く]、dim.／decresc.＝[だんだん弱く]</li></ul>
+<h3>⑤ 速度記号</h3>
+<table class="t"><tr><th>遅い ←</th><th></th><th></th><th>→ 速い</th></tr>
+<tr><td>[Adagio]<br>ゆるやかに</td><td>[Andante]<br>歩くような速さで</td><td>[Moderato]<br>中ぐらいの速さで</td><td>[Allegro]<br>速く</td></tr></table>
+<ul><li>rit.＝[だんだん遅く]、a tempo＝[もとの速さで]</li></ul>`)},
+
+eten:{name:'雅楽「越天楽」',sub:'平調 ― 管絃 ―',html:K(`
+<div class="map"><b>🗺 この単元の流れ</b>
+<ol><li>雅楽とは何か（1000年以上・管絃と舞楽）</li>
+<li>8つの楽器を、3つのなかまで覚える</li>
+<li>伝え方と奏法（唱歌・塩梅）</li>
+<li>紹介文を書く（記述問題）</li></ol></div>
+
+<h3>① 雅楽ってなに？</h3>
+<ul><li>雅楽は[1000]年以上も前から、わが国で表現されてきた音楽</li></ul>
+<table class="t"><tr><th>形</th><th>どんなもの？</th><th>曲</th></tr>
+<tr><td>[管絃]（かんげん）</td><td>雅楽の楽器だけで合奏する。舞（まい）は<b>ない</b></td><td>現在は[唐楽]の曲だけ。「越天楽」はこれ</td></tr>
+<tr><td>[舞楽]（ぶがく）</td><td>舞を<b>ともなう</b></td><td>左舞（さまい）＝[唐楽]（[中国]が起源）<br>右舞（うまい）＝[高麗楽]（[朝鮮半島]が起源）</td></tr></table>
+<ul><li>授業で聴いたのは「[平調]（ひょうじょう）越天楽」。[管絃]の曲</li>
+<li>[序破急]（じょはきゅう）＝序・破・急と進むにつれて、速度がしだいに[速く]なる。日本の伝統芸能に共通する考え方</li></ul>
+
+<h3>② 雅楽の楽器（3つのなかま・8つの楽器）</h3>
+<table class="t"><tr><th>なかま</th><th>楽器</th><th>音の出し方・役割</th></tr>
+<tr><td rowspan="3">[吹きもの]</td><td>篳篥（[ひちりき]）</td><td>[ヨシ]のリード。[主旋律]を受けもつ</td></tr>
+<tr><td>竜笛（[りゅうてき]）</td><td>竹の笛。[高い音域]で主旋律や装飾音</td></tr>
+<tr><td>笙（[しょう]）</td><td>[吹いても吸っても]音が出る。[和音]を奏でる</td></tr>
+<tr><td rowspan="2">[弾きもの]</td><td>楽箏（[がくそう]）</td><td>[13]本の絃を、指につけた[爪]で弾く</td></tr>
+<tr><td>楽琵琶（[がくびわ]）</td><td>[4]本の絃を、[ばち]で弾く</td></tr>
+<tr><td rowspan="3">[打ちもの]</td><td>羯鼓（[かっこ]）</td><td>皮の[両面]を打つ。全体の[テンポをリード]する</td></tr>
+<tr><td>釣太鼓（[つりだいこ]）</td><td>2本のばちで太鼓の[片面]を打つ</td></tr>
+<tr><td>鉦鼓（[しょうこ]）</td><td>[金属]製。皿状のへこんだ面を打つ</td></tr></table>
+<div class="tip">💡 <b>名前でなかま分け</b>：「楽」で始まる（楽箏・楽琵琶）＝弾きもの。「鼓」の字が入る（羯鼓・釣太鼓・鉦鼓）＝打ちもの。残りの3つ（篳篥・竜笛・笙）＝吹きもの。</div>
+<div class="tip">⚠ <b>まちがえやすいペア</b><br>
+・楽箏＝13本・爪 ／ 楽琵琶＝4本・ばち<br>
+・羯鼓＝両面・テンポをリード ／ 釣太鼓＝片面<br>
+・篳篥＝主旋律 ／ 笙＝和音</div>
+
+<h3>③ 唱歌と奏法</h3>
+<ul><li>[唱歌]（しょうが）＝楽器の音を[まねしてうたう]もの。旋律や奏法を[覚えたり伝えたり]するために使う（例：篳篥の「チーラー ロヲルロ…」）</li>
+<li>膝打ち：1・2拍は[上]から、3・4拍は[横]から打って拍をとる</li>
+<li>[塩梅]（えんばい）＝篳篥で、同じ運指のまま[音の高さ]や音色・音量を変化させる装飾的な奏法。音と音のあいだを、ずり上げるようにつなぐ</li></ul>
+
+<h3>④ 紹介文の書き方（記述問題）</h3>
+<p><b>型</b>：〔楽器・音色・旋律〕が〔どのように〕聴こえて、〔どんな感じ〕がした ＋ 〔学んだ背景〕から考えたこと</p>
+<table class="t"><tr><th>✕ これだけだと足りない</th><th>○ 音の特徴と背景が入っている</th></tr>
+<tr><td>ゆったりしていて、日本らしくてよかった。</td><td>篳篥の主旋律に笙の和音が重なり、羯鼓や太鼓がゆったり区切って、おごそかで落ち着いた感じがした。雅楽が1000年以上受けつがれてきたと知り、この響きを昔の人も聴いていたのだろうと想像した。</td></tr></table>
+<p class="cap">※ ○は型の例。テストでは、自分が聴き取ったことを楽器の名前を使って書こう。</p>`)},
+
+bol:{name:'ボレロ',sub:'ラヴェル作曲',html:K(`
+<div class="map"><b>🗺 この曲のポイント</b>　「<b>ずっと変わらないもの</b>」と「<b>だんだん変わるもの</b>」を分けて覚えると、ほとんどの問題に答えられる。
+<ol><li>曲のプロフィール</li><li>変わらないもの／変わるもの</li><li>旋律をリレーする楽器</li><li>強弱と終わり方</li><li>説明文を書く（記述問題）</li></ol></div>
+
+<h3>① どんな曲？</h3>
+<table class="t">
+<tr><th>作曲者</th><td>[ラヴェル]（1875〜1937）。[フランス]の作曲家。楽器の使い方の名人で「オーケストラの[魔術師]」とよばれた</td></tr>
+<tr><th>作られた年</th><td>[1928]年</td></tr>
+<tr><th>目的</th><td>[バレエ]（おどり）のための音楽</td></tr>
+<tr><th>曲名の意味</th><td>「ボレロ」＝[スペイン]の舞曲（おどりの音楽）の名前</td></tr>
+<tr><th>拍子</th><td>[3]拍子</td></tr></table>
+<div class="tip">⚠ 作曲者は<b>フランス</b>人、曲名は<b>スペイン</b>の舞曲。国を取りちがえやすい。</div>
+
+<h3>② 変わらないもの／変わるもの</h3>
+<table class="t"><tr><th>ずっと変わらない<br>（土台）</th><td>・[小太鼓]（スネアドラム）の[リズム]…最初から最後まで同じリズムをくり返す＝[オスティナート]<br>・[速さ]…ほとんど変わらない<br>・[2種類の旋律（A・B）]…A・A・B・B の順にくり返す</td></tr>
+<tr><th>だんだん変わる<br>（色と大きさ）</th><td>・旋律を演奏する[楽器（音色）]…次々に交代する<br>・[強弱]…だんだん強く<br>・重なる[楽器の数]…だんだん増える</td></tr></table>
+
+<h3>③ 旋律をリレーする楽器</h3>
+<table class="t"><tr><th>回</th><th>旋律</th><th>楽器</th></tr>
+<tr><td>1</td><td>A</td><td>[フルート]</td></tr><tr><td>2</td><td>A</td><td>[クラリネット]</td></tr>
+<tr><td>3</td><td>B</td><td>[ファゴット]</td></tr><tr><td>4</td><td>B</td><td>小クラリネット</td></tr>
+<tr><td>5</td><td>A</td><td>オーボエ・ダモーレ</td></tr><tr><td>6</td><td>A</td><td>トランペット＋フルート</td></tr>
+<tr><td>7</td><td>B</td><td>[テナー・サックス]</td></tr><tr><td>8</td><td>B</td><td>[ソプラノ・サックス]</td></tr>
+<tr><td>9</td><td>A</td><td>ホルン＋チェレスタ＋ピッコロ</td></tr><tr><td>10</td><td>A</td><td>オーボエ・イングリッシュホルン・クラリネット</td></tr>
+<tr><td>11</td><td>B</td><td>[トロンボーン]（ソロ）</td></tr>
+<tr><td>12〜</td><td></td><td>[木管]が重なる → [弦楽器]が加わる → [金管]も加わる → ほぼオーケストラ全員</td></tr></table>
+<div class="tip">💡 まず赤字だけ覚える：はじめの3つ「フルート → クラリネット → ファゴット」、オーケストラでは珍しいサックス（7・8回目）、トロンボーンのソロ（11回目）。後半は「木管 → 弦 → 金管」と増えていく。</div>
+
+<h3>④ 強弱と終わり方</h3>
+<ul><li>とても弱く（[pp]）始まり、少しずつ強くなって、最後はとても強く → 曲全体が長い長い[クレシェンド]</li>
+<li>終わり近くで急に調が変わる＝[転調]（ハ長調 → ホ長調 → ハ長調）</li>
+<li>そのあと一気にもり上がり、くずれ落ちるように終わる</li></ul>
+<div class="tip">⚠ 「もり上がる＝速くなる」ではない。速さは変わらず、強さと楽器の数が増えていく。<br>
+⚠ 3拍子＝小節の中の[拍のまとまり]／3連符＝ある長さを[3つに分ける]方法。名前は似ているが別のもの。</div>
+
+<h3>⑤ 説明文の書き方（記述問題）</h3>
+<p><b>型</b>：〔変わらないもの〕があるのに、〔変わるもの〕があるので、〔どう聴こえるか〕。</p>
+<table class="t"><tr><th>✕ 根拠がない</th><th>○ 聴き取ったことが根拠になっている</th></tr>
+<tr><td>だんだんもり上がって、あきなかった。</td><td>同じリズムと旋律を何度もくり返すが、旋律を演奏する楽器が次々に変わり、楽器の数もふえて、だんだん強くなっていく。だから同じくり返しでも音色が毎回ちがって聞こえ、最後まであきずに聴ける。</td></tr></table>`)},
+};
+
+/* ===================== 状態と保存 ===================== */
+const CAT={gaku:'楽典',gaku1:'楽典(1年)',eten:'越天楽',bol:'ボレロ'};
+const LS='ongaku2-test-v1';
+let store={weak:{},hist:[],sel:['gaku','eten','bol'],mode:'4',hide:false};
+try{const s=JSON.parse(localStorage.getItem(LS));if(s)store=Object.assign(store,s)}catch(e){}
+function save(){try{localStorage.setItem(LS,JSON.stringify(store))}catch(e){}}
+
+const app=document.getElementById('app');
+let view='quiz', sumTab='gaku', run=null;
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{view=b.dataset.v;run=null;render()});
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function render(){
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===view));
+  if(view==='sum')return renderSum();
+  if(view==='rec')return renderRec();
+  if(run)return run.done?renderResult():renderQ();
+  renderSetup();
+}
+
+function renderSetup(){
+  const weakN=Object.keys(store.weak).length;
+  const pool=Q.filter(q=>store.sel.includes(q.c));
+  app.innerHTML=`
+  <div class="card"><h2>① 範囲をえらぶ</h2><div class="chips">
+    ${Object.keys(CAT).map(c=>`<button class="chip${store.sel.includes(c)?' on':''}" data-c="${c}"><b>${SUM[c].name}</b><span>${SUM[c].sub}・${Q.filter(q=>q.c===c).length}問</span></button>`).join('')}
+  </div></div>
+  <div class="card"><h2>② やり方をえらぶ</h2><div class="chips">
+    <button class="chip${store.mode==='4'?' on':''}" data-m="4"><b>4択クイズ</b><span>えらんで答える。すぐに解説</span></button>
+    <button class="chip${store.mode==='f'?' on':''}" data-m="f"><b>一問一答</b><span>頭の中で答えてから「答え」を見る</span></button>
+  </div></div>
+  <div class="card"><h2>③ スタート</h2>
+    <div class="row">
+      <button class="btn big" data-start="10" ${pool.length?'':'disabled'}>10問</button>
+      <button class="btn big" data-start="20" ${pool.length?'':'disabled'}>20問</button>
+      <button class="btn big sub" data-start="all" ${pool.length?'':'disabled'}>全部（${pool.length}問）</button>
+      <button class="btn big sub" data-start="weak" ${weakN?'':'disabled'}>苦手だけ（${weakN}問）</button>
+    </div>
+    <p class="muted">まちがえた問題は「苦手」に入り、2回続けて正解すると外れます。テスト前は <b>まとめ</b> の「かくす」で赤字を覚えてから、問題をとくのがおすすめ。</p>
+  </div>`;
+  app.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{const c=b.dataset.c;store.sel=store.sel.includes(c)?store.sel.filter(x=>x!==c):[...store.sel,c];save();render()});
+  app.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{store.mode=b.dataset.m;save();render()});
+  app.querySelectorAll('[data-start]').forEach(b=>b.onclick=()=>start(b.dataset.start));
+}
+
+function start(kind){
+  let list=kind==='weak'?Q.filter(q=>store.weak[q.id]):Q.filter(q=>store.sel.includes(q.c));
+  list=shuffle(list);
+  if(kind==='10'||kind==='20')list=list.slice(0,+kind);
+  run={list,i:0,ok:0,miss:[],answered:false,mode:store.mode,kind,done:false};
+  render();
+}
+
+function mark(q,ok){
+  const w=store.weak[q.id];
+  if(!ok)store.weak[q.id]={n:0};
+  else if(w){w.n++;if(w.n>=2)delete store.weak[q.id]}
+  save();
+}
+
+function renderQ(){
+  const q=run.list[run.i], n=run.list.length;
+  const head=`<div class="row" style="justify-content:space-between"><span class="tag ${q.c}">${CAT[q.c]}｜${q.t}</span><span class="muted">${run.i+1} / ${n}問　正解 ${run.ok}</span></div>
+  <div class="prog"><i style="width:${run.i/n*100}%"></i></div>`;
+  if(run.mode==='f'){
+    app.innerHTML=`<div class="card flash" id="fc">${head}<div class="q">${esc(q.q)}</div>${figHTML(q.fig)}
+      <div class="row" id="showRow"><button class="btn big" id="show">答えを見る</button></div>
+      <div class="ansbox"><div class="ans">${esc(q.a)}</div><p>${esc(q.ex)}</p>
+      <div class="row"><button class="btn big" data-self="1" style="background:var(--ok)">○ 言えた</button><button class="btn big" data-self="0" style="background:var(--ng)">× まだ</button></div></div>
+      <p class="row" style="margin-top:14px"><button class="btn sub" id="quit">やめる</button></p></div>`;
+    app.querySelector('#show').onclick=()=>{app.querySelector('#fc').classList.add('show');app.querySelector('#showRow').style.display='none'};
+    app.querySelectorAll('[data-self]').forEach(b=>b.onclick=()=>{const ok=b.dataset.self==='1';mark(q,ok);if(ok)run.ok++;else run.miss.push(q);next()});
+  }else{
+    if(!run.opts||run.optsFor!==run.i){run.opts=shuffle([q.a,...q.d]);run.optsFor=run.i;run.answered=false}
+    app.innerHTML=`<div class="card">${head}<div class="q">${esc(q.q)}</div>${figHTML(q.fig)}
+      <div class="choices">${run.opts.map((o,k)=>`<button class="choice" data-o="${k}"><span class="n">${'アイウエ'[k]}</span><span>${esc(o)}</span></button>`).join('')}</div>
+      <div class="fb" id="fb"></div>
+      <p class="row" style="margin-top:14px;justify-content:space-between"><button class="btn sub" id="quit">やめる</button><button class="btn big" id="nx" style="display:none">${run.i+1<n?'次へ →':'結果を見る'}</button></p></div>`;
+    app.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{
+      if(run.answered)return;run.answered=true;
+      const pick=run.opts[+b.dataset.o], ok=pick===q.a;
+      app.querySelectorAll('.choice').forEach(c=>{c.disabled=true;const o=run.opts[+c.dataset.o];if(o===q.a)c.classList.add('ok');else if(c===b)c.classList.add('ng')});
+      const fb=app.querySelector('#fb');fb.className='fb '+(ok?'ok':'ng');
+      fb.innerHTML=`<b>${ok?'⭕ 正解！':'❌ ざんねん'}</b>${ok?'':`<div>正解：<b>${esc(q.a)}</b></div>`}<div>${esc(q.ex)}</div>`;
+      mark(q,ok);if(ok)run.ok++;else run.miss.push(q);
+      const nx=app.querySelector('#nx');nx.style.display='';nx.focus();nx.onclick=next;
+    });
+  }
+  app.querySelector('#quit').onclick=()=>{run=null;render()};
+}
+function next(){run.i++;if(run.i>=run.list.length){run.done=true;
+  store.hist.unshift({d:new Date().toLocaleString('ja-JP',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}),ok:run.ok,n:run.list.length,cats:[...new Set(run.list.map(q=>CAT[q.c]))].join('・'),mode:run.mode==='f'?'一問一答':'4択'});
+  store.hist=store.hist.slice(0,30);save()}
+  render();window.scrollTo(0,0)}
+
+function renderResult(){
+  const pct=Math.round(run.ok/run.list.length*100);
+  const msg=pct===100?'パーフェクト！🎉':pct>=80?'よくできました！あと少し！':pct>=60?'いい調子。まちがえたところを見直そう':'まとめを見てから、もう一度チャレンジ！';
+  app.innerHTML=`<div class="card"><h2>結果</h2><div class="score">${run.ok} / ${run.list.length}</div><p style="text-align:center">${pct}点　${msg}</p>
+   <div class="row" style="justify-content:center">${run.miss.length?'<button class="btn big" id="again">まちがえた問題だけもう一度</button>':''}<button class="btn big sub" id="back">メニューへ</button></div></div>
+   ${run.miss.length?`<div class="card"><h2>まちがえた問題（${run.miss.length}）</h2>${run.miss.map(q=>`<div class="miss"><span class="tag ${q.c}">${CAT[q.c]}</span> ${esc(q.q)}${figHTML(q.fig)}<div class="ans">${esc(q.a)}</div><div class="muted">${esc(q.ex)}</div></div>`).join('')}</div>`:''}`;
+  app.querySelector('#back').onclick=()=>{run=null;render()};
+  const a=app.querySelector('#again');if(a)a.onclick=()=>{run={list:shuffle(run.miss),i:0,ok:0,miss:[],mode:run.mode,done:false};render()};
+}
+
+function renderSum(){
+  const s=SUM[sumTab];
+  app.innerHTML=`<div class="card"><div class="sumbar"><div class="chips" style="flex:1">${Object.keys(SUM).map(c=>`<button class="chip${c===sumTab?' on':''}" data-c="${c}" data-tab="${c}" style="flex:1 1 130px"><b>${SUM[c].name}</b></button>`).join('')}</div></div>
+  <div class="row" style="justify-content:space-between"><span class="muted">赤字がテストに出やすいところ</span>
+  <button class="btn ${store.hide?'':'sub'}" id="hide">${store.hide?'🙈 かくしている（タップで1つずつ見る）':'赤字をかくす'}</button></div>
+  ${sumTab==='gaku'?`<div class="row" style="margin-top:10px"><button class="play" data-play='["c4","d4","e4","f4","g4","a4","b4","c5"]'>▶ 長音階（ハ長調）</button><button class="play" data-play='["a4","b4","c5","d5","e5","f5","g5","a5"]'>▶ 自然短音階（イ短調）</button></div>`:''}
+  <div class="sum ${store.hide?'hide':''}" data-c="${sumTab}">${s.html}</div></div>`;
+  app.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{sumTab=b.dataset.tab;render()});
+  app.querySelector('#hide').onclick=()=>{store.hide=!store.hide;save();render()};
+  app.querySelectorAll('.hide .k').forEach(k=>k.onclick=()=>k.classList.toggle('open'));
+}
+
+function renderRec(){
+  const weak=Q.filter(q=>store.weak[q.id]);
+  app.innerHTML=`<div class="card"><h2>これまでの記録</h2>${store.hist.length?`<table class="t"><tr><th>日時</th><th>範囲</th><th>やり方</th><th>正解</th></tr>${store.hist.map(h=>`<tr><td>${h.d}</td><td>${h.cats}</td><td>${h.mode}</td><td>${h.ok}/${h.n}</td></tr>`).join('')}</table>`:'<p class="muted">まだ記録がありません。</p>'}</div>
+  <div class="card"><h2>苦手な問題（${weak.length}）</h2>${weak.length?weak.map(q=>`<div class="miss"><span class="tag ${q.c}">${CAT[q.c]}</span> ${esc(q.q)}<div class="ans">${esc(q.a)}</div></div>`).join(''):'<p class="muted">苦手な問題はありません。</p>'}
+  <p class="row"><button class="btn sub" id="reset">記録をすべて消す</button></p></div>`;
+  app.querySelector('#reset').onclick=()=>{if(confirm('記録と苦手リストをすべて消します。よろしいですか？')){store.weak={};store.hist=[];save();render()}};
+}
+render();
+</script>
+</body>
+</html>
